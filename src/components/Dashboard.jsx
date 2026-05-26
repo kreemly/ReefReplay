@@ -316,13 +316,13 @@ const PROP_COMPANIES = {
           ]
         },
         {
-          id: 'fod_trail',
-          name: 'FOD Trail (Drawdown Fin del Día)',
+          id: 'eod_trail',
+          name: 'EOD Trail (Drawdown Fin del Día)',
           accounts: [
             {
-              id: 'apex_25k_fod',
+              id: 'apex_25k_eod',
               firm: 'Apex Trader Funding',
-              size: '$25K FOD Trail',
+              size: '$25K EOD Trail',
               initialBalance: 25000,
               target: 1500,
               maxDrawdown: 1500,
@@ -336,9 +336,9 @@ const PROP_COMPANIES = {
               bestValue: false
             },
             {
-              id: 'apex_50k_fod',
+              id: 'apex_50k_eod',
               firm: 'Apex Trader Funding',
-              size: '$50K FOD Trail',
+              size: '$50K EOD Trail',
               initialBalance: 50000,
               target: 3000,
               maxDrawdown: 2500,
@@ -352,9 +352,9 @@ const PROP_COMPANIES = {
               bestValue: true
             },
             {
-              id: 'apex_100k_fod',
+              id: 'apex_100k_eod',
               firm: 'Apex Trader Funding',
-              size: '$100K FOD Trail',
+              size: '$100K EOD Trail',
               initialBalance: 100000,
               target: 6000,
               maxDrawdown: 3000,
@@ -3166,22 +3166,20 @@ export default function Dashboard({ user, onLogout }) {
                             setSelectedFirmId(firm.id);
                             setSelectedModelId(firm.models[0].id);
                           }}
-                          whileHover={{ scale: 1.05, y: -4 }}
-                          whileActive={{ scale: 0.97 }}
+                          whileHover={{ scale: 1.04, y: -2 }}
+                          whileActive={{ scale: 0.98 }}
                           style={{
                             borderColor: isSelected ? firm.accentColor : 'rgba(255, 255, 255, 0.05)',
-                            boxShadow: isSelected ? `0 10px 30px -5px ${firm.accentColor}25, 0 0 15px ${firm.accentColor}10` : 'none'
+                            backgroundColor: isSelected ? `${firm.accentColor}12` : 'rgba(9, 9, 11, 0.2)',
+                            boxShadow: isSelected ? `0 8px 20px -4px ${firm.accentColor}30, 0 0 10px ${firm.accentColor}10` : 'none'
                           }}
-                          className={`relative overflow-hidden h-28 rounded-2xl border p-4.5 flex flex-col items-center justify-between text-center backdrop-blur-md transition-all duration-300 ${isSelected ? 'bg-zinc-900/60 border-t-2 z-10' : 'bg-zinc-950/20'}`}
+                          className={`relative overflow-hidden h-28 rounded-2xl border p-4.5 flex flex-col items-center justify-between text-center backdrop-blur-md transition-all duration-200 ${isSelected ? 'border-t-2 z-10 font-bold' : ''}`}
                         >
+                          {/* Sleek brand-colored border indicator */}
                           {isSelected && (
-                            <motion.div
-                              layoutId="activeFirmGlow"
-                              className="absolute inset-0 rounded-2xl border border-white/10 pointer-events-none"
-                              style={{
-                                background: `radial-gradient(circle at center, ${firm.accentColor}0a 0%, transparent 70%)`
-                              }}
-                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            <div 
+                              style={{ backgroundColor: firm.accentColor }}
+                              className="absolute top-0 inset-x-0 h-0.5"
                             />
                           )}
                           
@@ -3221,24 +3219,19 @@ export default function Dashboard({ user, onLogout }) {
                         </h4>
                       </div>
                       
-                      <div className="relative flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-center mt-1.5">
+                      <div className="relative flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-center mt-1.5 gap-1">
                         {currentFirm.models.map((model) => {
                           const isSelected = selectedModelId === model.id;
                           return (
                             <button
                               key={model.id}
                               onClick={() => setSelectedModelId(model.id)}
-                              className="relative px-5 py-2 rounded-lg text-[10px] font-title font-black uppercase tracking-wider transition-colors z-10"
-                              style={{ color: isSelected ? '#000' : 'rgba(255, 255, 255, 0.4)' }}
+                              className={`relative px-5 py-2 rounded-lg text-[10px] font-title font-black uppercase tracking-wider transition-all duration-150 z-10 ${isSelected ? 'shadow-lg text-black font-extrabold' : 'text-zinc-500 hover:text-zinc-300'}`}
+                              style={{
+                                backgroundColor: isSelected ? currentFirm.accentColor : 'transparent',
+                                color: isSelected ? '#000' : 'rgba(255, 255, 255, 0.4)'
+                              }}
                             >
-                              {isSelected && (
-                                <motion.div
-                                  layoutId="activeModelPill"
-                                  className="absolute inset-0 rounded-lg shadow-lg z-[-1]"
-                                  style={{ backgroundColor: currentFirm.accentColor }}
-                                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                                />
-                              )}
                               <span>{model.name.split(' ')[0]} {model.name.includes('Step') ? (model.name.includes('2') ? '2-Step' : '1-Step') : ''}</span>
                             </button>
                           );
@@ -3266,15 +3259,14 @@ export default function Dashboard({ user, onLogout }) {
                   };
 
                   const cardVariants = {
-                    hidden: { opacity: 0, y: 30, scale: 0.95 },
+                    hidden: { opacity: 0, y: 15 },
                     show: { 
                       opacity: 1, 
-                      y: 0, 
-                      scale: 1,
+                      y: 0,
                       transition: {
-                        type: "spring",
-                        stiffness: 100,
-                        damping: 15
+                        type: "tween",
+                        duration: 0.18,
+                        ease: "easeOut"
                       }
                     }
                   };
