@@ -6,6 +6,7 @@ import {
   TrendingDown, 
   Calendar, 
   Tv, 
+  History,
   ShieldAlert, 
   LogOut, 
   User, 
@@ -371,11 +372,11 @@ export default function Dashboard({ user, onLogout }) {
     setQuickTpPrice(targetTP.toFixed(decimals));
   }, [currentPrice, quickType, activeAsset, quickRR]);
 
-  // Vercel Terminal Logs
+  // Vercel Terminal Logs (Audit Console)
   const [webhookLogs, setWebhookLogs] = useState([
-    { id: 1, time: '11:00:02', text: 'Canal webhook inicializado correctamente', type: 'info' },
-    { id: 2, time: '11:00:03', text: 'Servidor local de Advanced Charts listo en puerto 5174', type: 'success' },
-    { id: 3, time: '11:00:05', text: 'Cargado motor gráfico Advanced Charts de ReefReplay', type: 'info' }
+    { id: 1, time: '11:00:02', text: 'Canal de auditoría del motor ReefReplay inicializado correctamente', type: 'info' },
+    { id: 2, time: '11:00:03', text: 'Servidor local de simulación cargado con éxito en memoria', type: 'success' },
+    { id: 3, time: '11:00:05', text: 'Motor de análisis de drawdown restrictivo (Reef Defender) listo y activo', type: 'info' }
   ]);
   const [isSimulatingTV, setIsSimulatingTV] = useState(false);
 
@@ -670,16 +671,57 @@ export default function Dashboard({ user, onLogout }) {
     syncEngineSnapshot();
   };
 
-  // Simulación de Trigger manual de TV
+  // Exportar el historial de trades de la sesión en CSV compatible con Excel
+  const exportToCSV = () => {
+    if (trades.length === 0) {
+      alert("No hay operaciones registradas en esta sesión para exportar.");
+      return;
+    }
+    
+    const headers = ["ID", "Direccion", "Activo", "Precio Entrada", "SL", "TP", "Estado", "Sesion", "Emocion", "Confluencias", "R:R"];
+    
+    const rows = trades.map(t => [
+      t.id,
+      t.type,
+      t.asset,
+      t.price,
+      t.sl,
+      t.tp,
+      t.status,
+      t.session,
+      t.emotion,
+      t.confluence,
+      t.rr + " R"
+    ]);
+    
+    // Convert array to CSV string with UTF-8 BOM for Excel compatibility
+    const csvRows = [headers.join(",")];
+    for (const row of rows) {
+      csvRows.push(row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","));
+    }
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + csvRows.join("\n");
+      
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `reefreplay_backtest_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    logToConsole('Historial del diario exportado con éxito en formato CSV.', 'success');
+  };
+
+  // Simulación de inyectar operación de prueba de backtest
   const triggerTVSimulation = () => {
     if (isSimulatingTV || isCircuitBreakerTripped) return;
     setIsSimulatingTV(true);
 
     const logSteps = [
-      { text: 'Señal de entrada recibida de TradingView (Webhook Alert)', type: 'info' },
-      { text: 'Estrategia: ReefReplay Quantum Scalper V4.1 [XAUUSD]', type: 'info' },
-      { text: 'Verificando Compliance de Prop Firm... OK (Colchón seguro)', type: 'success' },
-      { text: 'Orden simulada de Webhook inyectada en vivo a la Agenda: BUY a $2335.00', type: 'success' }
+      { text: 'Iniciando simulación de orden en vivo en el motor ReefReplay...', type: 'info' },
+      { text: 'Activo seleccionado para el backtest de prueba: XAUUSD (Oro)', type: 'info' },
+      { text: 'Verificando parámetros del Reef Defender... OK (Cuenta Activa)', type: 'success' },
+      { text: 'Operación simulada registrada con éxito en el diario: BUY a $2335.00', type: 'success' }
     ];
 
     let delay = 0;
@@ -698,14 +740,14 @@ export default function Dashboard({ user, onLogout }) {
             sl: 2325.00,
             tp: 2355.00,
             risk: 500,
-            session: 'New York (TV API)',
+            session: 'New York (Sim)',
             emotion: 'Automatizado',
             confluence: 5,
             checklist: true,
             status: 'PENDING',
             rr: 2.0,
             netProfit: 0,
-            timestamp: 'Webhook TV'
+            timestamp: 'Prueba Sim'
           };
           setTrades(prev => [simulatedTrade, ...prev]);
           setSelectedTradeId(simulatedTrade.id);
@@ -844,8 +886,8 @@ export default function Dashboard({ user, onLogout }) {
               onClick={() => setActiveTab('webhook')}
               className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === 'webhook' ? 'bg-white/5 border border-white/10 text-white shadow-inner shadow-white/5' : 'text-zinc-500 hover:text-zinc-300'}`}
             >
-              <Tv className={`w-4 h-4 ${activeTab === 'webhook' ? 'text-accent-gold' : 'text-zinc-500'}`} />
-              Enlace TradingView
+              <History className={`w-4 h-4 ${activeTab === 'webhook' ? 'text-accent-gold' : 'text-zinc-500'}`} />
+              Diario de Backtest
             </button>
 
             <button
@@ -1644,7 +1686,7 @@ export default function Dashboard({ user, onLogout }) {
               </motion.div>
             )}
 
-            {/* TAB: WEBHOOK TERMINAL EN LIVE */}
+            {/* TAB: BITÁCORA Y CONSOLA DE AUDITORÍA */}
             {activeTab === 'webhook' && (
               <motion.div
                 key="webhook"
@@ -1655,40 +1697,39 @@ export default function Dashboard({ user, onLogout }) {
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 text-left"
               >
                 
-                {/* LADO IZQUIERDO: INTEGRACIÓN */}
+                {/* LADO IZQUIERDO: GESTOR DE BITÁCORA */}
                 <div className="lg:col-span-5 bg-zinc-950/20 border border-white/5 rounded-3xl p-6 flex flex-col gap-6 backdrop-blur-xl">
                   <div>
                     <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-accent-gold/10 border border-accent-gold/20 text-[9px] font-extrabold text-accent-gold uppercase tracking-widest">
-                      WEBHOOK INTEGRATOR PRO
+                      BACKTEST AUDITOR SYSTEM
                     </span>
                     <h3 className="font-title font-extrabold text-lg text-white mt-3.5 tracking-tight">
-                      Sincronización con TradingView
+                      Diario de Backtesting y Datos
                     </h3>
                     <p className="text-zinc-400 text-xs mt-1.5 font-body leading-relaxed">
-                      Vincula tus scripts de alertas o estrategias de Pine Script en TradingView directo a ReefReplay. Cada vez que tu sistema dispare una señal en TradingView, la agenda ejecutiva programará e ingresará la operación de forma instantánea.
+                      Supervisa, audita y gestiona el historial de tu sesión de replay actual. Puedes descargar todos tus trades simulados en un archivo CSV profesional para analizarlos en Excel, o vaciar el registro para empezar de cero.
                     </p>
                   </div>
 
-                  <div className="flex flex-col gap-3.5">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">URL de Webhook Personal</label>
-                      <input 
-                        type="text" 
-                        readOnly 
-                        value="https://api.reefreplay.com/v1/webhooks/usr-92837482" 
-                        className="w-full bg-black/60 border border-white/5 rounded-xl py-3.5 px-4 text-xs font-mono text-accent-blue focus:outline-none select-all backdrop-blur-sm"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">Handshake Token API</label>
-                      <input 
-                        type="password" 
-                        readOnly 
-                        value="z3d_secret_token_key_h2839djnskdf84" 
-                        className="w-full bg-black/60 border border-white/5 rounded-xl py-3.5 px-4 text-xs font-mono text-zinc-700 focus:outline-none select-all backdrop-blur-sm"
-                      />
-                    </div>
+                  <div className="flex flex-col gap-4">
+                    <button
+                      onClick={exportToCSV}
+                      className="relative overflow-hidden font-title font-bold text-xs uppercase tracking-widest text-white bg-white/5 border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-all w-full py-3.5 rounded-xl flex items-center justify-center gap-2"
+                    >
+                      <History className="w-4 h-4 text-accent-purple" />
+                      <span>Exportar Diario a CSV</span>
+                    </button>
+
+                    <button
+                      onClick={handleResetSimulator}
+                      className="relative overflow-hidden font-title font-bold text-xs uppercase tracking-widest text-zinc-400 bg-black/40 border border-white/5 hover:border-accent-red/20 hover:text-white active:scale-[0.98] transition-all w-full py-3.5 rounded-xl flex items-center justify-center gap-2"
+                    >
+                      <RotateCcw className="w-4 h-4 text-accent-red" />
+                      <span>Reiniciar Sesión de Replay</span>
+                    </button>
                   </div>
+
+                  <div className="h-[1px] bg-white/5 my-1" />
 
                   <button
                     onClick={triggerTVSimulation}
@@ -1696,7 +1737,7 @@ export default function Dashboard({ user, onLogout }) {
                     className={`relative overflow-hidden font-title font-bold text-xs uppercase tracking-widest text-white shadow-xl active:scale-[0.98] transition-all w-full py-4 rounded-xl flex items-center justify-center gap-2 ${isSimulatingTV ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 cursor-not-allowed animate-none' : 'animate-shimmer'}`}
                   >
                     <Zap className={`w-4 h-4 ${isSimulatingTV ? 'text-zinc-500' : 'text-accent-gold alarm-blink-red'}`} />
-                    <span>{isSimulatingTV ? 'PROBANDO HANDSHAKE...' : 'Probar Enlace de TradingView'}</span>
+                    <span>{isSimulatingTV ? 'SIMULANDO EJECUCIÓN...' : 'Inyectar Operación de Prueba'}</span>
                   </button>
                 </div>
 
@@ -1706,7 +1747,7 @@ export default function Dashboard({ user, onLogout }) {
                   <div className="flex justify-between items-center border-b border-white/5 pb-3">
                     <h3 className="font-title font-bold text-sm text-white tracking-tight flex items-center gap-2">
                       <Terminal className="w-4 h-4 text-accent-gold" />
-                      Consola de Eventos del Servidor API
+                      Consola de Auditoría del Motor de Replay
                     </h3>
                     <button 
                       onClick={() => setWebhookLogs([{ id: 1, time: '11:00:02', text: 'Canal webhook inicializado correctamente', type: 'info' }])}
