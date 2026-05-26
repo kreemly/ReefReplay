@@ -230,130 +230,1029 @@ export function getAssetTickDist(assetName) {
   return 0.0050; // 50 pips default
 }
 
-// Desafíos de Fondeo (Apex, Topstep, FTMO, etc.) estructurados para simulación offline
-const PROP_CHALLENGES = {
+// Desafíos de Fondeo Reales y Detallados (Apex, Topstep, FTMO, etc.) estructurados por Firma y Modelo de Desafío
+const PROP_COMPANIES = {
   futures: [
     {
-      id: 'apex_50k',
-      firm: 'Apex Trader Funding',
-      size: '$50K Account',
-      initialBalance: 50000,
-      target: 3000,
-      maxDrawdown: 2500,
-      drawdownType: 'Trailing',
-      dailyLimit: 0,
-      contracts: '10 Minis / 100 Micros',
-      fee: '$147 (Reembolsable)'
+      id: 'apex',
+      name: 'Apex Trader Funding',
+      tagline: 'El gigante mundial de futuros con drawdown dinámico.',
+      logo: '▲ APEX',
+      brandColor: 'emerald',
+      accentColor: '#10b981',
+      bgGlow: 'rgba(16, 185, 129, 0.05)',
+      textColor: 'text-emerald-400',
+      borderColor: 'border-emerald-500/20 hover:border-emerald-500/40',
+      btnStyle: 'bg-emerald-500 hover:bg-emerald-600 text-black shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20',
+      models: [
+        {
+          id: 'intraday_trail',
+          name: 'Intraday Trail (Trailing Intradía)',
+          accounts: [
+            {
+              id: 'apex_25k_intra',
+              firm: 'Apex Trader Funding',
+              size: '$25K Intraday Trail',
+              initialBalance: 25000,
+              target: 1500,
+              maxDrawdown: 1500,
+              drawdownType: 'Intraday Trailing',
+              dailyLimit: 0,
+              contracts: '4 Minis / 40 Micros',
+              minDays: 1,
+              fee: '$147 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'apex_50k_intra',
+              firm: 'Apex Trader Funding',
+              size: '$50K Intraday Trail',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2500,
+              drawdownType: 'Intraday Trailing',
+              dailyLimit: 0,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 1,
+              fee: '$167 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'apex_100k_intra',
+              firm: 'Apex Trader Funding',
+              size: '$100K Intraday Trail',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'Intraday Trailing',
+              dailyLimit: 0,
+              contracts: '14 Minis / 140 Micros',
+              minDays: 1,
+              fee: '$207 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'apex_150k_intra',
+              firm: 'Apex Trader Funding',
+              size: '$150K Intraday Trail',
+              initialBalance: 150000,
+              target: 9000,
+              maxDrawdown: 5000,
+              drawdownType: 'Intraday Trailing',
+              dailyLimit: 0,
+              contracts: '17 Minis / 170 Micros',
+              minDays: 1,
+              fee: '$297 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        },
+        {
+          id: 'fod_trail',
+          name: 'FOD Trail (Drawdown Fin del Día)',
+          accounts: [
+            {
+              id: 'apex_25k_fod',
+              firm: 'Apex Trader Funding',
+              size: '$25K FOD Trail',
+              initialBalance: 25000,
+              target: 1500,
+              maxDrawdown: 1500,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '4 Minis / 40 Micros',
+              minDays: 1,
+              fee: '$150 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'apex_50k_fod',
+              firm: 'Apex Trader Funding',
+              size: '$50K FOD Trail',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2500,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 1,
+              fee: '$175 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'apex_100k_fod',
+              firm: 'Apex Trader Funding',
+              size: '$100K FOD Trail',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '14 Minis / 140 Micros',
+              minDays: 1,
+              fee: '$220 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'topstep_50k',
-      firm: 'Topstep Combine',
-      size: '$50K Combine',
-      initialBalance: 50000,
-      target: 3000,
-      maxDrawdown: 2000,
-      drawdownType: 'Trailing',
-      dailyLimit: 1000,
-      contracts: '5 Minis / 50 Micros',
-      fee: '$49/mes'
+      id: 'topstep',
+      name: 'Topstep Combine',
+      tagline: 'El pionero absoluto en futuros con límites de consistencia.',
+      logo: '● TOPSTEP',
+      brandColor: 'yellow',
+      accentColor: '#eab308',
+      bgGlow: 'rgba(234, 179, 8, 0.05)',
+      textColor: 'text-yellow-400',
+      borderColor: 'border-yellow-500/20 hover:border-yellow-500/40',
+      btnStyle: 'bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg shadow-yellow-500/10 hover:shadow-yellow-500/20',
+      models: [
+        {
+          id: 'combine_1step',
+          name: 'Combine (1-Step)',
+          accounts: [
+            {
+              id: 'topstep_50k',
+              firm: 'Topstep Combine',
+              size: '$50K Combine',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2000,
+              drawdownType: 'Trailing',
+              dailyLimit: 1000,
+              contracts: '5 Minis / 50 Micros',
+              minDays: 5,
+              fee: '$49/mes',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'topstep_100k',
+              firm: 'Topstep Combine',
+              size: '$100K Combine',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'Trailing',
+              dailyLimit: 2000,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 5,
+              fee: '$99/mes',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'topstep_150k',
+              firm: 'Topstep Combine',
+              size: '$150K Combine',
+              initialBalance: 150000,
+              target: 9000,
+              maxDrawdown: 4500,
+              drawdownType: 'Trailing',
+              dailyLimit: 3000,
+              contracts: '15 Minis / 150 Micros',
+              minDays: 5,
+              fee: '$149/mes',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'topstep_100k',
-      firm: 'Topstep Combine',
-      size: '$100K Combine',
-      initialBalance: 100000,
-      target: 6000,
-      maxDrawdown: 3000,
-      drawdownType: 'Trailing',
-      dailyLimit: 2000,
-      contracts: '10 Minis / 100 Micros',
-      fee: '$99/mes'
+      id: 'myfundedfutures',
+      name: 'MyFundedFutures',
+      tagline: 'Cuentas de futuros con drawdown al final del día (EOD).',
+      logo: '◆ MFFUTURES',
+      brandColor: 'purple',
+      accentColor: '#a855f7',
+      bgGlow: 'rgba(168, 85, 247, 0.05)',
+      textColor: 'text-purple-400',
+      borderColor: 'border-purple-500/20 hover:border-purple-500/40',
+      btnStyle: 'bg-purple-500 hover:bg-purple-600 text-white shadow-lg shadow-purple-500/10 hover:shadow-purple-500/20',
+      models: [
+        {
+          id: 'starter_eod',
+          name: 'Starter (EOD Drawdown)',
+          accounts: [
+            {
+              id: 'mffu_50k',
+              firm: 'MyFundedFutures',
+              size: '$50K Starter',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 1100,
+              contracts: '5 Minis / 50 Micros',
+              minDays: 1,
+              fee: '$50 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'mffu_100k',
+              firm: 'MyFundedFutures',
+              size: '$100K Starter',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 2200,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 1,
+              fee: '$100 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'mffu_150k',
+              firm: 'MyFundedFutures',
+              size: '$150K Starter',
+              initialBalance: 150000,
+              target: 9000,
+              maxDrawdown: 5000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 3300,
+              contracts: '15 Minis / 150 Micros',
+              minDays: 1,
+              fee: '$150 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'mffu_50k',
-      firm: 'MyFundedFutures',
-      size: '$50K Starter',
-      initialBalance: 50000,
-      target: 3000,
-      maxDrawdown: 2000,
-      drawdownType: 'End-of-Day',
-      dailyLimit: 1100,
-      contracts: '5 Minis / 50 Micros',
-      fee: '$50 (Reembolsable)'
+      id: 'takeprof',
+      name: 'Take Profit Trader',
+      tagline: 'Cuentas con retiros rápidos y sin demoras regulatorias.',
+      logo: '► TAKEPROFIT',
+      brandColor: 'amber',
+      accentColor: '#f59e0b',
+      bgGlow: 'rgba(245, 158, 11, 0.05)',
+      textColor: 'text-amber-400',
+      borderColor: 'border-amber-500/20 hover:border-amber-500/40',
+      btnStyle: 'bg-amber-500 hover:bg-amber-600 text-black shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20',
+      models: [
+        {
+          id: 'standard_eod',
+          name: 'Standard EOD (Retiros Pro)',
+          accounts: [
+            {
+              id: 'takeprof_25k',
+              firm: 'Take Profit Trader',
+              size: '$25K Account',
+              initialBalance: 25000,
+              target: 1500,
+              maxDrawdown: 1500,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 500,
+              contracts: '2 Minis / 20 Micros',
+              minDays: 5,
+              fee: '$130 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'takeprof_50k',
+              firm: 'Take Profit Trader',
+              size: '$50K Account',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 1100,
+              contracts: '5 Minis / 50 Micros',
+              minDays: 5,
+              fee: '$150 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: true
+            },
+            {
+              id: 'takeprof_100k',
+              firm: 'Take Profit Trader',
+              size: '$100K Account',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 2200,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 5,
+              fee: '$330 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'takeprof_150k',
+              firm: 'Take Profit Trader',
+              size: '$150K Account',
+              initialBalance: 150000,
+              target: 9000,
+              maxDrawdown: 5000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 3300,
+              contracts: '15 Minis / 150 Micros',
+              minDays: 5,
+              fee: '$440 (Reembolsable)',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'takeprof_50k',
-      firm: 'Take Profit Trader',
-      size: '$50K Account',
-      initialBalance: 50000,
-      target: 3000,
-      maxDrawdown: 2000,
-      drawdownType: 'End-of-Day',
-      dailyLimit: 1100,
-      contracts: '5 Minis / 50 Micros',
-      fee: '$150 (Reembolsable)'
+      id: 'bullox',
+      name: 'Bullox Futures',
+      tagline: 'Desafíos de futuros de alta velocidad con reglas simples.',
+      logo: '♉ BULLOX',
+      brandColor: 'cyan',
+      accentColor: '#06b6d4',
+      bgGlow: 'rgba(6, 182, 212, 0.05)',
+      textColor: 'text-cyan-400',
+      borderColor: 'border-cyan-500/20 hover:border-cyan-500/40',
+      btnStyle: 'bg-cyan-500 hover:bg-cyan-600 text-black shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20',
+      models: [
+        {
+          id: 'standard',
+          name: 'Standard (EOD Drawdown)',
+          accounts: [
+            {
+              id: 'bullox_50k',
+              firm: 'Bullox Futures',
+              size: '$50K Combine',
+              initialBalance: 50000,
+              target: 3000,
+              maxDrawdown: 2000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '5 Minis / 50 Micros',
+              minDays: 1,
+              fee: '$45',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'bullox_100k',
+              firm: 'Bullox Futures',
+              size: '$100K Combine',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 3000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '10 Minis / 100 Micros',
+              minDays: 1,
+              fee: '$85',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'bullox_150k',
+              firm: 'Bullox Futures',
+              size: '$150K Combine',
+              initialBalance: 150000,
+              target: 9000,
+              maxDrawdown: 5000,
+              drawdownType: 'End-of-Day',
+              dailyLimit: 0,
+              contracts: '15 Minis / 150 Micros',
+              minDays: 1,
+              fee: '$135',
+              refund: 'N/A',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     }
   ],
   forex: [
     {
-      id: 'ftmo_50k',
-      firm: 'FTMO Challenge',
-      size: '$50K Standard',
-      initialBalance: 50000,
-      target: 5000,
-      maxDrawdown: 5000,
-      drawdownType: 'Fixed Max Loss',
-      dailyLimit: 2500,
-      leverage: '1:100',
-      fee: '€345 (Reembolsable)'
+      id: 'ftmo',
+      name: 'FTMO Challenge',
+      tagline: 'El estándar de oro absoluto en trading de CFDs / Forex.',
+      logo: '⚙ FTMO',
+      brandColor: 'blue',
+      accentColor: '#3b82f6',
+      bgGlow: 'rgba(59, 130, 246, 0.05)',
+      textColor: 'text-blue-400',
+      borderColor: 'border-blue-500/20 hover:border-blue-500/40',
+      btnStyle: 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20',
+      models: [
+        {
+          id: '2-step',
+          name: '2-Step (Estándar de 2 fases)',
+          accounts: [
+            {
+              id: 'ftmo_10k_2step',
+              firm: 'FTMO Challenge',
+              size: '$10K Standard 2-Step',
+              initialBalance: 1000, // wait! initialBalance is size:
+              initialBalance: 10000,
+              target: 1000, // Phase 1 10%
+              maxDrawdown: 1000, // 10%
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 500, // 5%
+              leverage: '1:100',
+              minDays: 4,
+              fee: '€89',
+              refund: 'Sí, 100%',
+              split: 'hasta el 90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_25k_2step',
+              firm: 'FTMO Challenge',
+              size: '$25K Standard 2-Step',
+              initialBalance: 25000,
+              target: 2500,
+              maxDrawdown: 2500,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 1250,
+              leverage: '1:100',
+              minDays: 4,
+              fee: '€250',
+              refund: 'Sí, 100%',
+              split: 'hasta el 90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_50k_2step',
+              firm: 'FTMO Challenge',
+              size: '$50K Standard 2-Step',
+              initialBalance: 50000,
+              target: 5000,
+              maxDrawdown: 5000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 2500,
+              leverage: '1:100',
+              minDays: 4,
+              fee: '€345',
+              refund: 'Sí, 100%',
+              split: 'hasta el 90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_100k_2step',
+              firm: 'FTMO Challenge',
+              size: '$100K Standard 2-Step',
+              initialBalance: 100000,
+              target: 10000,
+              maxDrawdown: 10000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 5000,
+              leverage: '1:100',
+              minDays: 4,
+              fee: '€439 €540',
+              refund: 'Sí, 100%',
+              split: 'hasta el 90%',
+              bestValue: true
+            },
+            {
+              id: 'ftmo_200k_2step',
+              firm: 'FTMO Challenge',
+              size: '$200K Standard 2-Step',
+              initialBalance: 200000,
+              target: 20000,
+              maxDrawdown: 20000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 10000,
+              leverage: '1:100',
+              minDays: 4,
+              fee: '€1080',
+              refund: 'Sí, 100%',
+              split: 'hasta el 90%',
+              bestValue: false
+            }
+          ]
+        },
+        {
+          id: '1-step',
+          name: '1-Step (Un paso a la Cuenta FTMO)',
+          accounts: [
+            {
+              id: 'ftmo_10k_1step',
+              firm: 'FTMO Challenge',
+              size: '$10K Standard 1-Step',
+              initialBalance: 10000,
+              target: 1000, // 10%
+              maxDrawdown: 1000, // 10%
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 300, // 3%
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€79',
+              refund: 'No reembolsable',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_25k_1step',
+              firm: 'FTMO Challenge',
+              size: '$25K Standard 1-Step',
+              initialBalance: 25000,
+              target: 2500,
+              maxDrawdown: 2500,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 750, // 3%
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€199',
+              refund: 'No reembolsable',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_50k_1step',
+              firm: 'FTMO Challenge',
+              size: '$50K Standard 1-Step',
+              initialBalance: 50000,
+              target: 5000,
+              maxDrawdown: 5000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 1500, // 3%
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€319',
+              refund: 'No reembolsable',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'ftmo_100k_1step',
+              firm: 'FTMO Challenge',
+              size: '$100K Standard 1-Step',
+              initialBalance: 100000,
+              target: 10000,
+              maxDrawdown: 10000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 3000, // 3%
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€499',
+              refund: 'No reembolsable',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'ftmo_200k_1step',
+              firm: 'FTMO Challenge',
+              size: '$200K Standard 1-Step',
+              initialBalance: 200000,
+              target: 20000,
+              maxDrawdown: 20000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 6000, // 3%
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€999',
+              refund: 'No reembolsable',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'ftmo_100k',
-      firm: 'FTMO Challenge',
-      size: '$100K Standard',
-      initialBalance: 100000,
-      target: 10000,
-      maxDrawdown: 10000,
-      drawdownType: 'Fixed Max Loss',
-      dailyLimit: 5000,
-      leverage: '1:100',
-      fee: '€540 (Reembolsable)'
+      id: 'fundingpips',
+      name: 'Funding Pips',
+      tagline: 'Evaluaciones rápidas con pagos puntuales y costos mínimos.',
+      logo: '✥ FUNDINGPIPS',
+      brandColor: 'orange',
+      accentColor: '#f97316',
+      bgGlow: 'rgba(249, 115, 22, 0.05)',
+      textColor: 'text-orange-400',
+      borderColor: 'border-orange-500/20 hover:border-orange-500/40',
+      btnStyle: 'bg-orange-500 hover:bg-orange-600 text-black shadow-lg shadow-orange-500/10 hover:shadow-orange-500/20',
+      models: [
+        {
+          id: '2-step',
+          name: '2-Step (Fase 1 y Fase 2)',
+          accounts: [
+            {
+              id: 'funding_5k_2step',
+              firm: 'Funding Pips',
+              size: '$5K Evaluation 2-Step',
+              initialBalance: 5000,
+              target: 400, // 8%
+              maxDrawdown: 500, // 10%
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 250, // 5%
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$39',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: false
+            },
+            {
+              id: 'funding_10k_2step',
+              firm: 'Funding Pips',
+              size: '$10K Evaluation 2-Step',
+              initialBalance: 10000,
+              target: 800,
+              maxDrawdown: 1000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 500,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$59',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: false
+            },
+            {
+              id: 'funding_25k_2step',
+              firm: 'Funding Pips',
+              size: '$25K Evaluation 2-Step',
+              initialBalance: 25000,
+              target: 2000,
+              maxDrawdown: 2500,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 1250,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$139',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: false
+            },
+            {
+              id: 'funding_50k_2step',
+              firm: 'Funding Pips',
+              size: '$50K Evaluation 2-Step',
+              initialBalance: 50000,
+              target: 4000,
+              maxDrawdown: 5000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 2500,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$239',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: false
+            },
+            {
+              id: 'funding_100k_2step',
+              firm: 'Funding Pips',
+              size: '$100K Evaluation 2-Step',
+              initialBalance: 100000,
+              target: 8000,
+              maxDrawdown: 10000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 5000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$399',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: true
+            },
+            {
+              id: 'funding_200k_2step',
+              firm: 'Funding Pips',
+              size: '$200K Evaluation 2-Step',
+              initialBalance: 200000,
+              target: 16000,
+              maxDrawdown: 20000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 10000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$799',
+              refund: 'Sí, 100%',
+              split: 'hasta el 95%',
+              bestValue: false
+            }
+          ]
+        },
+        {
+          id: '1-step',
+          name: '1-Step (Fase Única)',
+          accounts: [
+            {
+              id: 'funding_5k_1step',
+              firm: 'Funding Pips',
+              size: '$5K Evaluation 1-Step',
+              initialBalance: 5000,
+              target: 500, // 10%
+              maxDrawdown: 300, // 6%
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 150, // 3%
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$59',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'funding_10k_1step',
+              firm: 'Funding Pips',
+              size: '$10K Evaluation 1-Step',
+              initialBalance: 10000,
+              target: 1000,
+              maxDrawdown: 600,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 300,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$99',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'funding_25k_1step',
+              firm: 'Funding Pips',
+              size: '$25K Evaluation 1-Step',
+              initialBalance: 25000,
+              target: 2500,
+              maxDrawdown: 1500,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 750,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$199',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'funding_50k_1step',
+              firm: 'Funding Pips',
+              size: '$50K Evaluation 1-Step',
+              initialBalance: 50000,
+              target: 5000,
+              maxDrawdown: 3000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 1500,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$319',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'funding_100k_1step',
+              firm: 'Funding Pips',
+              size: '$100K Evaluation 1-Step',
+              initialBalance: 100000,
+              target: 10000,
+              maxDrawdown: 6000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 3000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$555',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: true
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'fundingpips_100k',
-      firm: 'Funding Pips',
-      size: '$100K Evaluation',
-      initialBalance: 100000,
-      target: 8000,
-      maxDrawdown: 10000,
-      drawdownType: 'Fixed Max Loss',
-      dailyLimit: 5000,
-      leverage: '1:100',
-      fee: '$399'
+      id: 'myfundedfx',
+      name: 'MyFundedFX 2-Step',
+      tagline: 'Sin límites de tiempo y planes de escalabilidad masivos.',
+      logo: '✦ MYFUNDEDFX',
+      brandColor: 'indigo',
+      accentColor: '#6366f1',
+      bgGlow: 'rgba(99, 102, 241, 0.05)',
+      textColor: 'text-indigo-400',
+      borderColor: 'border-indigo-500/20 hover:border-indigo-500/40',
+      btnStyle: 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20',
+      models: [
+        {
+          id: '2-step',
+          name: '2-Step (Fase 1: 8% / Fase 2: 5%)',
+          accounts: [
+            {
+              id: 'myfundedfx_10k_2step',
+              firm: 'MyFundedFX 2-Step',
+              size: '$10K Evaluation',
+              initialBalance: 10000,
+              target: 800,
+              maxDrawdown: 800,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 500,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$99',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'myfundedfx_50k_2step',
+              firm: 'MyFundedFX 2-Step',
+              size: '$50K Evaluation',
+              initialBalance: 50000,
+              target: 4000,
+              maxDrawdown: 4000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 2500,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$299',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: true
+            },
+            {
+              id: 'myfundedfx_100k_2step',
+              firm: 'MyFundedFX 2-Step',
+              size: '$100K Evaluation',
+              initialBalance: 100000,
+              target: 8000,
+              maxDrawdown: 8000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 5000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$499',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            },
+            {
+              id: 'myfundedfx_200k_2step',
+              firm: 'MyFundedFX 2-Step',
+              size: '$200K Evaluation',
+              initialBalance: 200000,
+              target: 16000,
+              maxDrawdown: 16000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 10000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$949',
+              refund: 'Sí, 100%',
+              split: '80%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'myfundedfx_50k',
-      firm: 'MyFundedFX 2-Step',
-      size: '$50K Evaluation',
-      initialBalance: 50000,
-      target: 4000,
-      maxDrawdown: 4000,
-      drawdownType: 'Fixed Max Loss',
-      dailyLimit: 2500,
-      leverage: '1:100',
-      fee: '$299'
+      id: 'the5ers',
+      name: 'The 5%ers',
+      tagline: 'Crecimiento de bajo costo y plan de escalamiento exponencial.',
+      logo: '⚄ THE5ERS',
+      brandColor: 'rose',
+      accentColor: '#f43f5e',
+      bgGlow: 'rgba(244, 63, 94, 0.05)',
+      textColor: 'text-rose-400',
+      borderColor: 'border-rose-500/20 hover:border-rose-500/40',
+      btnStyle: 'bg-rose-500 hover:bg-rose-600 text-white shadow-lg shadow-rose-500/10 hover:shadow-rose-500/20',
+      models: [
+        {
+          id: 'bootcamp',
+          name: 'Bootcamp (Desafío de 3 Fases)',
+          accounts: [
+            {
+              id: 'the5ers_100k_boot',
+              firm: 'The 5%ers Bootcamp',
+              size: '$100K Bootcamp',
+              initialBalance: 100000,
+              target: 6000,
+              maxDrawdown: 5000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 5000,
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€95',
+              refund: 'Reembolsable en fase final',
+              split: 'hasta el 100%',
+              bestValue: true
+            },
+            {
+              id: 'the5ers_250k_boot',
+              firm: 'The 5%ers Bootcamp',
+              size: '$250K Bootcamp',
+              initialBalance: 250000,
+              target: 15000,
+              maxDrawdown: 12500,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 12500,
+              leverage: '1:30',
+              minDays: 0,
+              fee: '€225',
+              refund: 'Reembolsable en fase final',
+              split: 'hasta el 100%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     },
     {
-      id: 'the5ers_100k',
-      firm: 'The 5%ers Bootcamp',
-      size: '$100K Bootcamp',
-      initialBalance: 100000,
-      target: 6000,
-      maxDrawdown: 5000,
-      drawdownType: 'Fixed Max Loss',
-      dailyLimit: 5000,
-      leverage: '1:30',
-      fee: '€95'
+      id: 'fundednext',
+      name: 'FundedNext',
+      tagline: 'Participación en ganancias desde el primer día evaluado.',
+      logo: '✥ FUNDEDNEXT',
+      brandColor: 'teal',
+      accentColor: '#14b8a6',
+      bgGlow: 'rgba(20, 184, 166, 0.05)',
+      textColor: 'text-teal-400',
+      borderColor: 'border-teal-500/20 hover:border-teal-500/40',
+      btnStyle: 'bg-teal-500 hover:bg-teal-600 text-black shadow-lg shadow-teal-500/10 hover:shadow-teal-500/20',
+      models: [
+        {
+          id: 'stella_2step',
+          name: 'Stella (2 Fases)',
+          accounts: [
+            {
+              id: 'next_50k_stella2',
+              firm: 'FundedNext',
+              size: '$50K Stella 2-Step',
+              initialBalance: 50000,
+              target: 4000, // 8%
+              maxDrawdown: 5000, // 10%
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 2500, // 5%
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$299',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            },
+            {
+              id: 'next_100k_stella2',
+              firm: 'FundedNext',
+              size: '$100K Stella 2-Step',
+              initialBalance: 100000,
+              target: 8000,
+              maxDrawdown: 10000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 5000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$489',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: true
+            },
+            {
+              id: 'next_200k_stella2',
+              firm: 'FundedNext',
+              size: '$200K Stella 2-Step',
+              initialBalance: 200000,
+              target: 16000,
+              maxDrawdown: 20000,
+              drawdownType: 'Fixed Max Loss',
+              dailyLimit: 10000,
+              leverage: '1:100',
+              minDays: 0,
+              fee: '$979',
+              refund: 'Sí, 100%',
+              split: '90%',
+              bestValue: false
+            }
+          ]
+        }
+      ]
     }
   ]
 };
@@ -364,6 +1263,8 @@ export default function Dashboard({ user, onLogout }) {
   const [peakBalance, setPeakBalance] = useState(user.balance || 50000);
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [selectedPropCategory, setSelectedPropCategory] = useState('futures');
+  const [selectedFirmId, setSelectedFirmId] = useState('apex');
+  const [selectedModelId, setSelectedModelId] = useState('intraday_trail');
   
   // Multi-Pair and Replay active configurations
   const [activeAsset, setActiveAsset] = useState('XAUUSD');
@@ -2105,13 +3006,21 @@ export default function Dashboard({ user, onLogout }) {
                   {/* CATEGORY SWITCHER */}
                   <div className="relative z-10 flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-start sm:self-center">
                     <button
-                      onClick={() => setSelectedPropCategory('futures')}
+                      onClick={() => {
+                        setSelectedPropCategory('futures');
+                        setSelectedFirmId('apex');
+                        setSelectedModelId('intraday_trail');
+                      }}
                       className={`px-4 py-2 rounded-lg text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${selectedPropCategory === 'futures' ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
                     >
                       Futuros (Futures)
                     </button>
                     <button
-                      onClick={() => setSelectedPropCategory('forex')}
+                      onClick={() => {
+                        setSelectedPropCategory('forex');
+                        setSelectedFirmId('ftmo');
+                        setSelectedModelId('2-step');
+                      }}
                       className={`px-4 py-2 rounded-lg text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${selectedPropCategory === 'forex' ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
                     >
                       CFD / Forex
@@ -2237,87 +3146,268 @@ export default function Dashboard({ user, onLogout }) {
                   </motion.div>
                 )}
 
-                {/* CHALLENGES CARDS GRID */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {PROP_CHALLENGES[selectedPropCategory].map((challenge) => {
-                    const isCurrentChallenge = activeChallenge && activeChallenge.id === challenge.id;
-                    const isDisabled = activeChallenge && activeChallenge.status === 'RUNNING';
-                    
-                    return (
-                      <div 
-                        key={challenge.id}
-                        className={`relative rounded-3xl border bg-zinc-950/20 backdrop-blur-xl p-5 flex flex-col justify-between gap-5 transition-all duration-300 shadow-3d hover:border-white/10 ${isCurrentChallenge ? 'border-accent-purple/40 shadow-3d-neon-purple/5' : 'border-white/5'}`}
-                      >
-                        {isCurrentChallenge && (
-                          <div className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-accent-blue to-accent-purple text-[8px] font-extrabold uppercase tracking-widest text-white shadow-lg alarm-blink-red">
-                            <Trophy className="w-2.5 h-2.5" />
-                            Reto Activo
-                          </div>
-                        )}
-
-                        <div className="flex flex-col gap-3">
-                          <div className="text-left">
-                            <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">{challenge.firm}</span>
-                            <h4 className="font-title font-black text-base text-white mt-0.5">{challenge.size}</h4>
-                          </div>
-
-                          <div className="h-[1px] bg-white/5" />
-
-                          {/* Challenge Specs Table */}
-                          <div className="flex flex-col gap-2 text-[10px] font-mono">
-                            <div className="flex justify-between text-zinc-500">
-                              <span>Objetivo:</span>
-                              <span className="text-accent-green font-bold">+${challenge.target.toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between text-zinc-500">
-                              <span>Drawdown Máx:</span>
-                              <span className="text-accent-red font-bold">-${challenge.maxDrawdown.toLocaleString()} ({challenge.drawdownType})</span>
-                            </div>
-                            <div className="flex justify-between text-zinc-500">
-                              <span>Pérdida Diaria:</span>
-                              <span className="text-zinc-300 font-bold">{challenge.dailyLimit > 0 ? `-$${challenge.dailyLimit.toLocaleString()}` : 'Sin límite'}</span>
-                            </div>
-                            {challenge.leverage ? (
-                              <div className="flex justify-between text-zinc-500">
-                                <span>Apalancamiento:</span>
-                                <span className="text-accent-blue font-bold">{challenge.leverage}</span>
-                              </div>
-                            ) : (
-                              <div className="flex justify-between text-zinc-500">
-                                <span>Contratos Máx:</span>
-                                <span className="text-accent-blue font-bold">{challenge.contracts}</span>
-                              </div>
-                            )}
-                            <div className="flex justify-between text-zinc-500 border-t border-white/5 pt-2 mt-1">
-                              <span>Costo de Acceso:</span>
-                              <span className="text-zinc-400 font-bold">{challenge.fee}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {isCurrentChallenge ? (
-                          <button
-                            onClick={handleAbandonChallenge}
-                            className="w-full py-3 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red font-title font-bold text-xs uppercase tracking-widest hover:bg-accent-red/20 active:scale-95 transition-all flex items-center justify-center gap-1.5"
-                          >
-                            <RotateCcw className="w-4 h-4" />
-                            <span>Terminar Desafío</span>
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleStartChallenge(challenge)}
-                            disabled={isDisabled}
-                            className={`w-full py-3 rounded-xl font-title font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 ${isDisabled ? 'bg-zinc-900 border border-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 border-transparent'}`}
-                          >
-                            <Trophy className="w-4 h-4 text-accent-gold alarm-blink-red" />
-                            <span>Iniciar Desafío</span>
-                          </button>
-                        )}
-
-                      </div>
-                    );
-                  })}
+                {/* 1. SELECCION DE FIRMA (PRO FIRM BRAND SELECTOR GRID) */}
+                <div className="flex flex-col gap-2 mt-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
+                    1. Selecciona la Empresa de Fondeo
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-1.5">
+                    {PROP_COMPANIES[selectedPropCategory].map((firm) => {
+                      const isSelected = selectedFirmId === firm.id;
+                      return (
+                        <motion.button
+                          key={firm.id}
+                          onClick={() => {
+                            setSelectedFirmId(firm.id);
+                            setSelectedModelId(firm.models[0].id);
+                          }}
+                          whileHover={{ scale: 1.03, translateY: -2 }}
+                          whileActive={{ scale: 0.98 }}
+                          style={{
+                            borderColor: isSelected ? firm.accentColor : 'rgba(255, 255, 255, 0.05)',
+                            backgroundColor: isSelected ? `${firm.accentColor}0a` : 'rgba(9, 9, 11, 0.2)',
+                            boxShadow: isSelected ? `0 0 20px ${firm.accentColor}15` : 'none'
+                          }}
+                          className={`relative overflow-hidden rounded-2xl border p-4.5 flex flex-col items-center justify-center text-center gap-2.5 backdrop-blur-md transition-all duration-300 ${isSelected ? 'border-t-2' : ''}`}
+                        >
+                          {isSelected && (
+                            <div 
+                              style={{ backgroundColor: firm.accentColor }}
+                              className="absolute top-0 inset-x-0 h-0.5"
+                            />
+                          )}
+                          <span className={`font-mono font-black text-xs tracking-wider transition-colors ${isSelected ? firm.textColor : 'text-zinc-400'}`}>
+                            {firm.logo}
+                          </span>
+                          <span className="text-[10px] font-title font-black text-white leading-none">
+                            {firm.name}
+                          </span>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
                 </div>
+
+                {/* 2. SELECCION DE MODELO / DESAFIO (MODEL TYPE SWITCHER) */}
+                {(() => {
+                  const currentFirm = PROP_COMPANIES[selectedPropCategory].find(f => f.id === selectedFirmId) 
+                    || PROP_COMPANIES[selectedPropCategory][0];
+                  
+                  if (currentFirm.models.length <= 1) return null;
+
+                  return (
+                    <div className="flex flex-col gap-2 mt-2 self-center text-center">
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
+                        2. Elige el Tipo de Challenge
+                      </span>
+                      <div className="relative flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-center mt-1.5">
+                        {currentFirm.models.map((model) => {
+                          const isSelected = selectedModelId === model.id;
+                          return (
+                            <button
+                              key={model.id}
+                              onClick={() => setSelectedModelId(model.id)}
+                              className={`px-4 py-2 rounded-lg text-[10px] font-title font-bold uppercase tracking-wider transition-all duration-200 ${isSelected ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg shadow-accent-purple/10' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            >
+                              {model.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* 3. CATALOGO DE CUENTAS COMPARATIVO REAL (CARDS GRID SIMULATING FTMO & FUNDING PIPS TABLE) */}
+                {(() => {
+                  const currentFirm = PROP_COMPANIES[selectedPropCategory].find(f => f.id === selectedFirmId) 
+                    || PROP_COMPANIES[selectedPropCategory][0];
+                  const currentModel = currentFirm.models.find(m => m.id === selectedModelId) 
+                    || currentFirm.models[0];
+
+                  return (
+                    <div className="flex flex-col gap-3 mt-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
+                          {currentFirm.models.length > 1 ? '3.' : '2.'} Cuentas y Desafíos Disponibles para {currentFirm.name}
+                        </span>
+                        <span className="text-[9px] font-mono text-zinc-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-full">
+                          Reglas del Drawdown: <strong style={{ color: currentFirm.accentColor }}>{currentFirm.models.find(m => m.id === selectedModelId)?.accounts[0]?.drawdownType || 'EOD'}</strong>
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2.5">
+                        {currentModel.accounts.map((challenge) => {
+                          const isCurrentChallenge = activeChallenge && activeChallenge.id === challenge.id;
+                          const isDisabled = activeChallenge && activeChallenge.status === 'RUNNING';
+
+                          return (
+                            <motion.div
+                              key={challenge.id}
+                              initial={{ opacity: 0, scale: 0.98 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.25 }}
+                              style={{
+                                borderColor: isCurrentChallenge 
+                                  ? currentFirm.accentColor 
+                                  : challenge.bestValue 
+                                    ? `${currentFirm.accentColor}50` 
+                                    : 'rgba(255, 255, 255, 0.05)',
+                                boxShadow: isCurrentChallenge 
+                                  ? `0 0 25px ${currentFirm.accentColor}10` 
+                                  : challenge.bestValue 
+                                    ? `0 0 20px ${currentFirm.accentColor}05` 
+                                    : 'none'
+                              }}
+                              className={`relative rounded-3xl border bg-zinc-950/20 backdrop-blur-xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 ${challenge.bestValue ? 'ring-1' : ''}`}
+                            >
+                              {/* Glowing Badges */}
+                              {isCurrentChallenge && (
+                                <div 
+                                  style={{ backgroundColor: currentFirm.accentColor }}
+                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1 px-3 py-1 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg shadow-white/5 alarm-blink-red"
+                                >
+                                  <Trophy className="w-2.5 h-2.5" />
+                                  <span>Reto Activo</span>
+                                </div>
+                              )}
+                              {challenge.bestValue && !isCurrentChallenge && (
+                                <div 
+                                  style={{ backgroundColor: currentFirm.accentColor }}
+                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg"
+                                >
+                                  <span>MEJOR VALOR</span>
+                                </div>
+                              )}
+
+                              {/* Card Content */}
+                              <div className="flex flex-col gap-4">
+                                <div className="text-left flex justify-between items-start">
+                                  <div>
+                                    <span className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">Cuenta Evaluada</span>
+                                    <h4 className="font-title font-black text-xl text-white mt-1 leading-none">{challenge.size}</h4>
+                                  </div>
+                                  <span className="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded border border-white/5 bg-white/5 text-zinc-400 font-mono">
+                                    {selectedPropCategory === 'futures' ? 'FUTUROS' : 'CFD/FOREX'}
+                                  </span>
+                                </div>
+
+                                <div className="h-[1px] bg-white/5" />
+
+                                {/* Interactive Specs Rows (matching the exact tables in the screenshots) */}
+                                <div className="flex flex-col gap-2.5 text-[10px] font-mono">
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <Trophy className="w-3 h-3 text-zinc-600" />
+                                      Objetivo de Ganancias:
+                                    </span>
+                                    <span className="text-accent-green font-black">
+                                      +${challenge.target.toLocaleString()} ({(challenge.target / challenge.initialBalance * 100).toFixed(0)}%)
+                                    </span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <AlertTriangle className="w-3 h-3 text-zinc-600" />
+                                      Pérdida Máxima Diaria:
+                                    </span>
+                                    <span className="text-zinc-300 font-bold">
+                                      {challenge.dailyLimit > 0 ? `-$${challenge.dailyLimit.toLocaleString()} (${(challenge.dailyLimit / challenge.initialBalance * 100).toFixed(0)}%)` : 'Sin Límite'}
+                                    </span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <ShieldCheck className="w-3 h-3 text-zinc-600" />
+                                      Pérdida Máxima (Drawdown):
+                                    </span>
+                                    <span className="text-accent-red font-black">
+                                      -${challenge.maxDrawdown.toLocaleString()} ({challenge.drawdownType})
+                                    </span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <Activity className="w-3 h-3 text-zinc-600" />
+                                      {challenge.leverage ? 'Apalancamiento:' : 'Contratos Máximos:'}
+                                    </span>
+                                    <span className="text-accent-blue font-black">
+                                      {challenge.leverage ? challenge.leverage : challenge.contracts}
+                                    </span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <Clock className="w-3 h-3 text-zinc-600" />
+                                      Días Mínimos de Trading:
+                                    </span>
+                                    <span className="text-zinc-300 font-bold">
+                                      {challenge.minDays > 0 ? `${challenge.minDays} días` : '0 días (Ilimitado)'}
+                                    </span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <DollarSign className="w-3 h-3 text-zinc-600" />
+                                      Reembolso de Cuota:
+                                    </span>
+                                    <span className="text-zinc-400 font-bold">{challenge.refund}</span>
+                                  </div>
+
+                                  <div className="flex justify-between items-center py-1">
+                                    <span className="text-zinc-500 flex items-center gap-1.5">
+                                      <Check className="w-3 h-3 text-zinc-600" />
+                                      Reparto de Beneficios:
+                                    </span>
+                                    <span className="text-zinc-300 font-bold">{challenge.split}</span>
+                                  </div>
+                                </div>
+
+                                <div className="h-[1px] bg-white/5" />
+
+                                {/* Pricing block at bottom */}
+                                <div className="flex justify-between items-center mt-1">
+                                  <div className="text-left">
+                                    <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Cuota de Acceso</span>
+                                    <span className="text-2xl font-black text-white font-mono tracking-tight">{challenge.fee}</span>
+                                  </div>
+                                  
+                                  <div className="flex-grow max-w-[130px]">
+                                    {isCurrentChallenge ? (
+                                      <button
+                                        onClick={handleAbandonChallenge}
+                                        className="w-full py-2.5 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red hover:bg-accent-red/20 font-title font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-1"
+                                      >
+                                        <RotateCcw className="w-3.5 h-3.5" />
+                                        <span>Terminar</span>
+                                      </button>
+                                    ) : (
+                                      <motion.button
+                                        onClick={() => handleStartChallenge(challenge)}
+                                        disabled={isDisabled}
+                                        whileHover={isDisabled ? {} : { scale: 1.03, boxShadow: `0 0 15px ${currentFirm.accentColor}30` }}
+                                        whileActive={isDisabled ? {} : { scale: 0.98 }}
+                                        style={{
+                                          backgroundColor: isDisabled ? '#18181b' : challenge.bestValue ? currentFirm.accentColor : 'rgba(255, 255, 255, 0.05)',
+                                          color: isDisabled ? '#52525b' : challenge.bestValue ? '#000' : '#fff',
+                                          border: isDisabled ? '1px solid #27272a' : challenge.bestValue ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
+                                        }}
+                                        className={`w-full py-2.5 rounded-xl font-title font-extrabold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-1 ${isDisabled ? 'cursor-not-allowed' : ''}`}
+                                      >
+                                        <Trophy className="w-3.5 h-3.5" />
+                                        <span>Iniciar</span>
+                                      </motion.button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
 
               </motion.div>
             )}
