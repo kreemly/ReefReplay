@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #000000;
+    color: #f8fafc;
+    font-family: 'Geist', 'Inter', sans-serif;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Linear Shimmer Effect (Continuous diagonal shine) */
+@keyframes shimmer-move {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 1) 0%,
+    rgba(192, 132, 252, 1) 25%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(192, 132, 252, 1) 75%,
+    rgba(168, 85, 247, 1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-move 4s infinite linear;
+}
+
+.animate-shimmer-blue {
+  background: linear-gradient(
+    90deg,
+    rgba(14, 165, 233, 1) 0%,
+    rgba(56, 189, 248, 1) 25%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(56, 189, 248, 1) 75%,
+    rgba(14, 165, 233, 1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-move 4.5s infinite linear;
+}
+
+/* Custom Glow Animations */
+@keyframes pulse-glow {
+  0% { transform: scale(0.96); opacity: 0.35; }
+  100% { transform: scale(1.08); opacity: 0.75; }
+}
+
+.pulse-glow-purple {
+  animation: pulse-glow 4s infinite alternate ease-in-out;
+}
+
+@keyframes alarm-blink {
+  0% { opacity: 0.4; filter: drop-shadow(0 0 2px #f43f5e); }
+  100% { opacity: 1; filter: drop-shadow(0 0 10px #f43f5e); }
+}
+
+.alarm-blink-red {
+  animation: alarm-blink 0.6s infinite alternate ease-in-out;
+}
+
+/* Interactive Slider Custom Track */
+.friction-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.friction-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #0ea5e9;
+  cursor: pointer;
+  box-shadow: 0 0 8px #0ea5e9;
+  transition: transform 0.1s;
+}
+
+.friction-range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: rgba(8, 10, 16, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-card-3d {
+  background: rgba(12, 16, 26, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.glass-card-3d:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Vercel Developer Console Terminal Style */
+.vercel-terminal {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: rgba(3, 4, 7, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+}
