@@ -895,7 +895,7 @@ export default function Dashboard({ user, onLogout }) {
               className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === 'compliance' ? 'bg-white/5 border border-white/10 text-white shadow-inner shadow-white/5' : 'text-zinc-500 hover:text-zinc-300'}`}
             >
               <ShieldAlert className={`w-4 h-4 ${activeTab === 'compliance' ? 'text-accent-green' : 'text-zinc-500'}`} />
-              Compliance HUD
+              Auditoría de Riesgo
             </button>
           </nav>
         </div>
@@ -1780,7 +1780,7 @@ export default function Dashboard({ user, onLogout }) {
               </motion.div>
             )}
 
-            {/* TAB: COMPLIANCE E INTRODUCCIÓN DEL TRAILING DRAWDOWN */}
+            {/* TAB: AUDITORÍA DE RIESGO E INTRODUCCIÓN DEL TRAILING DRAWDOWN */}
             {activeTab === 'compliance' && (
               <motion.div
                 key="compliance"
@@ -1791,22 +1791,22 @@ export default function Dashboard({ user, onLogout }) {
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 text-left"
               >
                 
-                {/* LADO IZQUIERDO: DETALLES DE COMPLIANCE */}
+                {/* LADO IZQUIERDO: DETALLES DE AUDITORÍA */}
                 <div className="lg:col-span-6 bg-zinc-950/20 border border-white/5 rounded-3xl p-6 flex flex-col gap-6 backdrop-blur-xl relative overflow-hidden">
                   <div className="absolute inset-0 bg-radial-gradient from-accent-purple/3 to-transparent pointer-events-none" />
-
+ 
                   <div className="relative z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-green/10 border border-accent-green/20 text-[9px] font-extrabold text-accent-green uppercase tracking-widest">
-                      COMPLIANCE DE FIRMAS DE FONDEO
+                      SIMULACIÓN DE REGLAS PROP FIRMS
                     </span>
                     <h3 className="font-title font-extrabold text-lg text-white mt-3.5 tracking-tight">
-                      Monitor de Drawdown Dinámico
+                      Simulador de Drawdown Dinámico (Replay)
                     </h3>
                     <p className="text-zinc-400 text-xs mt-1.5 font-body leading-relaxed">
-                      El <strong className="text-white font-extrabold">Intraday Trailing Drawdown</strong> es la métrica de liquidación más severa del trading minorista en firmas como Apex y Topstep. Se calcula de forma dinámica persiguiendo el punto más alto que haya alcanzado tu equidad flotante en tiempo real, en lugar de calcularse al cierre diario.
+                      El <strong className="text-white font-extrabold">Intraday Trailing Drawdown</strong> es la regla de liquidación más severa en firmas como Apex y Topstep. Se calcula persiguiendo el punto más alto que haya alcanzado tu equidad flotante en tiempo real. En ReefReplay, nuestro motor offline simula este límite para que entrenes tu estrategia en las condiciones exactas de las cuentas de fondeo antes de comprar una cuenta real.
                     </p>
                   </div>
-
+ 
                   <div className="flex flex-col gap-4 border-t border-white/5 pt-5 relative z-10">
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-zinc-500 font-bold uppercase tracking-wider font-mono">Máximo Saldo Alcanzado (Peak)</span>
@@ -1844,18 +1844,18 @@ export default function Dashboard({ user, onLogout }) {
                     </div>
                   </div>
                 </div>
-
+ 
                 {/* LADO DERECHO: INTERFACE DE CÁLCULO DE FRICCIÓN */}
                 <div className="lg:col-span-6 bg-zinc-950/20 border border-white/5 rounded-3xl p-6 flex flex-col gap-5 justify-between backdrop-blur-xl">
                   <div className="flex flex-col gap-4">
                     <h4 className="font-title font-bold text-xs text-white uppercase tracking-wider flex items-center gap-1.5">
                       <AlertTriangle className="w-4 h-4 text-accent-gold" />
-                      Calculador de Fricción Operativa Real
+                      Impacto del Desgaste y la Fricción Real
                     </h4>
                     <p className="text-[11px] text-zinc-400 font-body leading-relaxed">
-                      Tu plan original estipula un riesgo fijo de $500 por trade. Sin embargo, en el mercado real, el spread variable y la comisión de tu broker agregan un desgaste de fricción que el <strong className="text-white font-extrabold">SimulationEngine</strong> calcula en cada trade.
+                      El backtesting tradicional peca de ser "perfecto". En la realidad, el spread variable y la comisión round-trip reducen tus ganancias. ReefReplay calcula esta fricción en cada trade simulado para darte estadísticas 100% reales en tu diario de backtest.
                     </p>
-
+ 
                     <div className="bg-black/60 border border-white/5 rounded-2xl p-4.5 flex flex-col gap-3 font-mono text-[10px]">
                       <div className="flex justify-between items-center">
                         <span className="text-zinc-500">Pérdida Teórica de la Agenda:</span>
@@ -1878,7 +1878,7 @@ export default function Dashboard({ user, onLogout }) {
                       </div>
                     </div>
                   </div>
-
+ 
                   <div className={`border rounded-2xl p-4 flex items-center gap-3.5 transition-all duration-500 ${currentCushionTheme.border}`}>
                     <div className={`p-2.5 rounded-xl flex-shrink-0 bg-white/5 text-zinc-400 ${currentCushionTheme.text}`}>
                       <ShieldCheck className="w-5 h-5" />
