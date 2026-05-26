@@ -3146,11 +3146,16 @@ export default function Dashboard({ user, onLogout }) {
                   </motion.div>
                 )}
 
-                {/* 1. SELECCION DE FIRMA (PRO FIRM BRAND SELECTOR GRID) */}
-                <div className="flex flex-col gap-2 mt-2">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
-                    1. Selecciona la Empresa de Fondeo
-                  </span>
+                {/* 1. SELECCION DE FIRMA CON SLIDING PILL (PRO FIRM BRAND SELECTOR GRID) */}
+                <div className="flex flex-col gap-3 mt-3">
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-6 rounded-full bg-gradient-to-b from-accent-blue to-accent-purple shadow-[0_0_10px_rgba(124,58,237,0.5)]" />
+                    <h4 className="text-sm font-black uppercase tracking-wider text-zinc-100 font-title flex items-center gap-2">
+                      1. Selecciona la Empresa de Fondeo
+                      <span className="text-[10px] text-zinc-500 font-normal normal-case tracking-normal">(Elige tu firma de simulación)</span>
+                    </h4>
+                  </div>
+                  
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-1.5">
                     {PROP_COMPANIES[selectedPropCategory].map((firm) => {
                       const isSelected = selectedFirmId === firm.id;
@@ -3161,34 +3166,46 @@ export default function Dashboard({ user, onLogout }) {
                             setSelectedFirmId(firm.id);
                             setSelectedModelId(firm.models[0].id);
                           }}
-                          whileHover={{ scale: 1.03, translateY: -2 }}
-                          whileActive={{ scale: 0.98 }}
+                          whileHover={{ scale: 1.05, y: -4 }}
+                          whileActive={{ scale: 0.97 }}
                           style={{
                             borderColor: isSelected ? firm.accentColor : 'rgba(255, 255, 255, 0.05)',
-                            backgroundColor: isSelected ? `${firm.accentColor}0a` : 'rgba(9, 9, 11, 0.2)',
-                            boxShadow: isSelected ? `0 0 20px ${firm.accentColor}15` : 'none'
+                            boxShadow: isSelected ? `0 10px 30px -5px ${firm.accentColor}25, 0 0 15px ${firm.accentColor}10` : 'none'
                           }}
-                          className={`relative overflow-hidden rounded-2xl border p-4.5 flex flex-col items-center justify-center text-center gap-2.5 backdrop-blur-md transition-all duration-300 ${isSelected ? 'border-t-2' : ''}`}
+                          className={`relative overflow-hidden h-28 rounded-2xl border p-4.5 flex flex-col items-center justify-between text-center backdrop-blur-md transition-all duration-300 ${isSelected ? 'bg-zinc-900/60 border-t-2 z-10' : 'bg-zinc-950/20'}`}
                         >
                           {isSelected && (
-                            <div 
-                              style={{ backgroundColor: firm.accentColor }}
-                              className="absolute top-0 inset-x-0 h-0.5"
+                            <motion.div
+                              layoutId="activeFirmGlow"
+                              className="absolute inset-0 rounded-2xl border border-white/10 pointer-events-none"
+                              style={{
+                                background: `radial-gradient(circle at center, ${firm.accentColor}0a 0%, transparent 70%)`
+                              }}
+                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             />
                           )}
-                          <span className={`font-mono font-black text-xs tracking-wider transition-colors ${isSelected ? firm.textColor : 'text-zinc-400'}`}>
+                          
+                          {/* Brand Logo Header */}
+                          <span className={`font-mono font-black text-sm tracking-widest transition-all ${isSelected ? 'scale-110' : 'opacity-60'}`} style={{ color: isSelected ? firm.accentColor : 'rgba(255, 255, 255, 0.4)' }}>
                             {firm.logo}
                           </span>
-                          <span className="text-[10px] font-title font-black text-white leading-none">
-                            {firm.name}
-                          </span>
+                          
+                          {/* Company Name & Drawdown Type */}
+                          <div className="flex flex-col items-center gap-1.5 w-full">
+                            <span className="text-[11px] font-title font-black tracking-tight text-white leading-none uppercase">
+                              {firm.name.split(' ')[0]}
+                            </span>
+                            <span className="text-[8px] font-mono text-zinc-400 bg-white/5 border border-white/5 px-2 py-0.5 rounded-full leading-none">
+                              {firm.models[0].accounts[0].drawdownType}
+                            </span>
+                          </div>
                         </motion.button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* 2. SELECCION DE MODELO / DESAFIO (MODEL TYPE SWITCHER) */}
+                {/* 2. SELECCION DE MODELO / DESAFIO CON SLIDING TAB BACKGROUND PILL */}
                 {(() => {
                   const currentFirm = PROP_COMPANIES[selectedPropCategory].find(f => f.id === selectedFirmId) 
                     || PROP_COMPANIES[selectedPropCategory][0];
@@ -3196,10 +3213,14 @@ export default function Dashboard({ user, onLogout }) {
                   if (currentFirm.models.length <= 1) return null;
 
                   return (
-                    <div className="flex flex-col gap-2 mt-2 self-center text-center">
-                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
-                        2. Elige el Tipo de Challenge
-                      </span>
+                    <div className="flex flex-col gap-2 mt-4 self-center text-center">
+                      <div className="flex items-center gap-3 justify-center">
+                        <span className="w-2.5 h-6 rounded-full bg-gradient-to-b from-accent-purple to-accent-blue shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                        <h4 className="text-sm font-black uppercase tracking-wider text-zinc-100 font-title">
+                          2. Elige el Tipo de Challenge
+                        </h4>
+                      </div>
+                      
                       <div className="relative flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-center mt-1.5">
                         {currentFirm.models.map((model) => {
                           const isSelected = selectedModelId === model.id;
@@ -3207,9 +3228,18 @@ export default function Dashboard({ user, onLogout }) {
                             <button
                               key={model.id}
                               onClick={() => setSelectedModelId(model.id)}
-                              className={`px-4 py-2 rounded-lg text-[10px] font-title font-bold uppercase tracking-wider transition-all duration-200 ${isSelected ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg shadow-accent-purple/10' : 'text-zinc-500 hover:text-zinc-300'}`}
+                              className="relative px-5 py-2 rounded-lg text-[10px] font-title font-black uppercase tracking-wider transition-colors z-10"
+                              style={{ color: isSelected ? '#000' : 'rgba(255, 255, 255, 0.4)' }}
                             >
-                              {model.name}
+                              {isSelected && (
+                                <motion.div
+                                  layoutId="activeModelPill"
+                                  className="absolute inset-0 rounded-lg shadow-lg z-[-1]"
+                                  style={{ backgroundColor: currentFirm.accentColor }}
+                                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                                />
+                              )}
+                              <span>{model.name.split(' ')[0]} {model.name.includes('Step') ? (model.name.includes('2') ? '2-Step' : '1-Step') : ''}</span>
                             </button>
                           );
                         })}
@@ -3218,25 +3248,59 @@ export default function Dashboard({ user, onLogout }) {
                   );
                 })()}
 
-                {/* 3. CATALOGO DE CUENTAS COMPARATIVO REAL (CARDS GRID SIMULATING FTMO & FUNDING PIPS TABLE) */}
+                {/* 3. CATALOGO DE CUENTAS COMPARATIVO TERMINAL HUD (3D STAGGER CARDS GRID) */}
                 {(() => {
                   const currentFirm = PROP_COMPANIES[selectedPropCategory].find(f => f.id === selectedFirmId) 
                     || PROP_COMPANIES[selectedPropCategory][0];
                   const currentModel = currentFirm.models.find(m => m.id === selectedModelId) 
                     || currentFirm.models[0];
 
+                  const containerVariants = {
+                    hidden: { opacity: 0 },
+                    show: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.08
+                      }
+                    }
+                  };
+
+                  const cardVariants = {
+                    hidden: { opacity: 0, y: 30, scale: 0.95 },
+                    show: { 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 15
+                      }
+                    }
+                  };
+
                   return (
-                    <div className="flex flex-col gap-3 mt-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
-                          {currentFirm.models.length > 1 ? '3.' : '2.'} Cuentas y Desafíos Disponibles para {currentFirm.name}
-                        </span>
-                        <span className="text-[9px] font-mono text-zinc-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-full">
-                          Reglas del Drawdown: <strong style={{ color: currentFirm.accentColor }}>{currentFirm.models.find(m => m.id === selectedModelId)?.accounts[0]?.drawdownType || 'EOD'}</strong>
+                    <div className="flex flex-col gap-3 mt-4 w-full">
+                      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-white/5 pb-3 mb-2">
+                        <div className="flex items-center gap-3">
+                          <span className="w-2.5 h-6 rounded-full bg-gradient-to-b from-accent-blue to-accent-purple shadow-[0_0_10px_rgba(124,58,237,0.5)]" />
+                          <h4 className="text-sm font-black uppercase tracking-wider text-zinc-100 font-title">
+                            {currentFirm.models.length > 1 ? '3.' : '2.'} Cuentas y Desafíos Disponibles para {currentFirm.name}
+                          </h4>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-300 bg-white/5 border border-white/5 px-3 py-1.5 rounded-full flex items-center gap-2 self-start sm:self-auto">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent-green alarm-blink-red" />
+                          Reglas del Drawdown: <strong style={{ color: currentFirm.accentColor }} className="uppercase">{currentModel.accounts[0]?.drawdownType || 'EOD'}</strong>
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2.5">
+                      <motion.div 
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        key={`${selectedFirmId}_${selectedModelId}`}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-1.5"
+                      >
                         {currentModel.accounts.map((challenge) => {
                           const isCurrentChallenge = activeChallenge && activeChallenge.id === challenge.id;
                           const isDisabled = activeChallenge && activeChallenge.status === 'RUNNING';
@@ -3244,28 +3308,33 @@ export default function Dashboard({ user, onLogout }) {
                           return (
                             <motion.div
                               key={challenge.id}
-                              initial={{ opacity: 0, scale: 0.98 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ duration: 0.25 }}
+                              variants={cardVariants}
+                              whileHover={{ 
+                                y: -10, 
+                                scale: 1.025,
+                                borderColor: currentFirm.accentColor,
+                                boxShadow: `0 25px 50px -12px ${currentFirm.accentColor}25, 0 0 20px ${currentFirm.accentColor}12`
+                              }}
                               style={{
                                 borderColor: isCurrentChallenge 
                                   ? currentFirm.accentColor 
                                   : challenge.bestValue 
-                                    ? `${currentFirm.accentColor}50` 
+                                    ? `${currentFirm.accentColor}40` 
                                     : 'rgba(255, 255, 255, 0.05)',
                                 boxShadow: isCurrentChallenge 
-                                  ? `0 0 25px ${currentFirm.accentColor}10` 
-                                  : challenge.bestValue 
-                                    ? `0 0 20px ${currentFirm.accentColor}05` 
-                                    : 'none'
+                                  ? `0 0 30px ${currentFirm.accentColor}15` 
+                                  : 'none',
+                                background: isCurrentChallenge
+                                  ? `linear-gradient(135deg, rgba(9,9,11,0.8) 0%, ${currentFirm.accentColor}05 100%)`
+                                  : 'rgba(9, 9, 11, 0.4)'
                               }}
-                              className={`relative rounded-3xl border bg-zinc-950/20 backdrop-blur-xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 ${challenge.bestValue ? 'ring-1' : ''}`}
+                              className={`relative rounded-3xl border backdrop-blur-xl p-6.5 flex flex-col justify-between gap-6 transition-all duration-300 ${challenge.bestValue ? 'ring-1' : ''}`}
                             >
                               {/* Glowing Badges */}
                               {isCurrentChallenge && (
                                 <div 
                                   style={{ backgroundColor: currentFirm.accentColor }}
-                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1 px-3 py-1 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg shadow-white/5 alarm-blink-red"
+                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg shadow-white/5 alarm-blink-red z-20"
                                 >
                                   <Trophy className="w-2.5 h-2.5" />
                                   <span>Reto Activo</span>
@@ -3274,14 +3343,14 @@ export default function Dashboard({ user, onLogout }) {
                               {challenge.bestValue && !isCurrentChallenge && (
                                 <div 
                                   style={{ backgroundColor: currentFirm.accentColor }}
-                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg"
+                                  className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[8px] font-extrabold uppercase tracking-widest text-black shadow-lg z-20"
                                 >
                                   <span>MEJOR VALOR</span>
                                 </div>
                               )}
 
                               {/* Card Content */}
-                              <div className="flex flex-col gap-4">
+                              <div className="flex flex-col gap-5">
                                 <div className="text-left flex justify-between items-start">
                                   <div>
                                     <span className="text-[9px] font-extrabold text-zinc-500 uppercase tracking-widest">Cuenta Evaluada</span>
@@ -3294,89 +3363,91 @@ export default function Dashboard({ user, onLogout }) {
 
                                 <div className="h-[1px] bg-white/5" />
 
-                                {/* Interactive Specs Rows (matching the exact tables in the screenshots) */}
-                                <div className="flex flex-col gap-2.5 text-[10px] font-mono">
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <Trophy className="w-3 h-3 text-zinc-600" />
+                                {/* Interactive Specs Rows (Sleek dark HUD Cockpit style capsules) */}
+                                <div className="flex flex-col gap-3 text-xs font-mono">
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <Trophy className="w-4 h-4 text-zinc-500" />
                                       Objetivo de Ganancias:
                                     </span>
-                                    <span className="text-accent-green font-black">
+                                    <span className="text-accent-green font-black text-sm drop-shadow-[0_0_6px_rgba(16,185,129,0.2)]">
                                       +${challenge.target.toLocaleString()} ({(challenge.target / challenge.initialBalance * 100).toFixed(0)}%)
                                     </span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <AlertTriangle className="w-3 h-3 text-zinc-600" />
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <AlertTriangle className="w-4 h-4 text-zinc-500" />
                                       Pérdida Máxima Diaria:
                                     </span>
-                                    <span className="text-zinc-300 font-bold">
+                                    <span className="text-zinc-200 font-bold text-sm">
                                       {challenge.dailyLimit > 0 ? `-$${challenge.dailyLimit.toLocaleString()} (${(challenge.dailyLimit / challenge.initialBalance * 100).toFixed(0)}%)` : 'Sin Límite'}
                                     </span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <ShieldCheck className="w-3 h-3 text-zinc-600" />
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <ShieldCheck className="w-4 h-4 text-zinc-500" />
                                       Pérdida Máxima (Drawdown):
                                     </span>
-                                    <span className="text-accent-red font-black">
+                                    <span className="text-accent-red font-black text-sm drop-shadow-[0_0_6px_rgba(239,68,68,0.2)]">
                                       -${challenge.maxDrawdown.toLocaleString()} ({challenge.drawdownType})
                                     </span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <Activity className="w-3 h-3 text-zinc-600" />
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <Activity className="w-4 h-4 text-zinc-500" />
                                       {challenge.leverage ? 'Apalancamiento:' : 'Contratos Máximos:'}
                                     </span>
-                                    <span className="text-accent-blue font-black">
+                                    <span className="text-accent-blue font-black text-sm">
                                       {challenge.leverage ? challenge.leverage : challenge.contracts}
                                     </span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <Clock className="w-3 h-3 text-zinc-600" />
-                                      Días Mínimos de Trading:
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <Clock className="w-4 h-4 text-zinc-500" />
+                                      Días de Trading Mínimos:
                                     </span>
-                                    <span className="text-zinc-300 font-bold">
+                                    <span className="text-zinc-200 font-bold text-sm">
                                       {challenge.minDays > 0 ? `${challenge.minDays} días` : '0 días (Ilimitado)'}
                                     </span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1 border-b border-white/3">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <DollarSign className="w-3 h-3 text-zinc-600" />
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <DollarSign className="w-4 h-4 text-zinc-500" />
                                       Reembolso de Cuota:
                                     </span>
-                                    <span className="text-zinc-400 font-bold">{challenge.refund}</span>
+                                    <span className="text-zinc-300 font-bold text-xs">{challenge.refund}</span>
                                   </div>
 
-                                  <div className="flex justify-between items-center py-1">
-                                    <span className="text-zinc-500 flex items-center gap-1.5">
-                                      <Check className="w-3 h-3 text-zinc-600" />
+                                  <div className="bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-white/10 p-3 rounded-xl flex justify-between items-center transition-all">
+                                    <span className="text-zinc-400 font-bold flex items-center gap-2">
+                                      <Check className="w-4 h-4 text-zinc-500" />
                                       Reparto de Beneficios:
                                     </span>
-                                    <span className="text-zinc-300 font-bold">{challenge.split}</span>
+                                    <span className="text-zinc-200 font-bold text-sm">{challenge.split}</span>
                                   </div>
                                 </div>
+                              </div>
 
+                              <div className="flex flex-col gap-4 mt-2">
                                 <div className="h-[1px] bg-white/5" />
 
                                 {/* Pricing block at bottom */}
-                                <div className="flex justify-between items-center mt-1">
+                                <div className="flex justify-between items-center">
                                   <div className="text-left">
                                     <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Cuota de Acceso</span>
-                                    <span className="text-2xl font-black text-white font-mono tracking-tight">{challenge.fee}</span>
+                                    <span className="text-3xl font-black text-white font-mono tracking-tight">{challenge.fee}</span>
                                   </div>
                                   
                                   <div className="flex-grow max-w-[130px]">
                                     {isCurrentChallenge ? (
                                       <button
                                         onClick={handleAbandonChallenge}
-                                        className="w-full py-2.5 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red hover:bg-accent-red/20 font-title font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-1"
+                                        className="w-full py-3 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red hover:bg-accent-red/20 font-title font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all flex items-center justify-center gap-1"
                                       >
                                         <RotateCcw className="w-3.5 h-3.5" />
                                         <span>Terminar</span>
@@ -3392,7 +3463,7 @@ export default function Dashboard({ user, onLogout }) {
                                           color: isDisabled ? '#52525b' : challenge.bestValue ? '#000' : '#fff',
                                           border: isDisabled ? '1px solid #27272a' : challenge.bestValue ? 'none' : '1px solid rgba(255, 255, 255, 0.1)'
                                         }}
-                                        className={`w-full py-2.5 rounded-xl font-title font-extrabold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-1 ${isDisabled ? 'cursor-not-allowed' : ''}`}
+                                        className={`w-full py-3 rounded-xl font-title font-extrabold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-1 ${isDisabled ? 'cursor-not-allowed' : ''}`}
                                       >
                                         <Trophy className="w-3.5 h-3.5" />
                                         <span>Iniciar</span>
@@ -3404,7 +3475,7 @@ export default function Dashboard({ user, onLogout }) {
                             </motion.div>
                           );
                         })}
-                      </div>
+                      </motion.div>
                     </div>
                   );
                 })()}
