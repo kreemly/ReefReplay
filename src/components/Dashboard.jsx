@@ -7,8 +7,9 @@ import {
   Calendar, 
   Tv, 
   History,
+  Trophy,
   ShieldAlert, 
-  LogOut, 
+  LogOut,  
   User, 
   Plus, 
   CheckCircle2, 
@@ -229,10 +230,140 @@ export function getAssetTickDist(assetName) {
   return 0.0050; // 50 pips default
 }
 
+// Desafíos de Fondeo (Apex, Topstep, FTMO, etc.) estructurados para simulación offline
+const PROP_CHALLENGES = {
+  futures: [
+    {
+      id: 'apex_50k',
+      firm: 'Apex Trader Funding',
+      size: '$50K Account',
+      initialBalance: 50000,
+      target: 3000,
+      maxDrawdown: 2500,
+      drawdownType: 'Trailing',
+      dailyLimit: 0,
+      contracts: '10 Minis / 100 Micros',
+      fee: '$147 (Reembolsable)'
+    },
+    {
+      id: 'topstep_50k',
+      firm: 'Topstep Combine',
+      size: '$50K Combine',
+      initialBalance: 50000,
+      target: 3000,
+      maxDrawdown: 2000,
+      drawdownType: 'Trailing',
+      dailyLimit: 1000,
+      contracts: '5 Minis / 50 Micros',
+      fee: '$49/mes'
+    },
+    {
+      id: 'topstep_100k',
+      firm: 'Topstep Combine',
+      size: '$100K Combine',
+      initialBalance: 100000,
+      target: 6000,
+      maxDrawdown: 3000,
+      drawdownType: 'Trailing',
+      dailyLimit: 2000,
+      contracts: '10 Minis / 100 Micros',
+      fee: '$99/mes'
+    },
+    {
+      id: 'mffu_50k',
+      firm: 'MyFundedFutures',
+      size: '$50K Starter',
+      initialBalance: 50000,
+      target: 3000,
+      maxDrawdown: 2000,
+      drawdownType: 'End-of-Day',
+      dailyLimit: 1100,
+      contracts: '5 Minis / 50 Micros',
+      fee: '$50 (Reembolsable)'
+    },
+    {
+      id: 'takeprof_50k',
+      firm: 'Take Profit Trader',
+      size: '$50K Account',
+      initialBalance: 50000,
+      target: 3000,
+      maxDrawdown: 2000,
+      drawdownType: 'End-of-Day',
+      dailyLimit: 1100,
+      contracts: '5 Minis / 50 Micros',
+      fee: '$150 (Reembolsable)'
+    }
+  ],
+  forex: [
+    {
+      id: 'ftmo_50k',
+      firm: 'FTMO Challenge',
+      size: '$50K Standard',
+      initialBalance: 50000,
+      target: 5000,
+      maxDrawdown: 5000,
+      drawdownType: 'Fixed Max Loss',
+      dailyLimit: 2500,
+      leverage: '1:100',
+      fee: '€345 (Reembolsable)'
+    },
+    {
+      id: 'ftmo_100k',
+      firm: 'FTMO Challenge',
+      size: '$100K Standard',
+      initialBalance: 100000,
+      target: 10000,
+      maxDrawdown: 10000,
+      drawdownType: 'Fixed Max Loss',
+      dailyLimit: 5000,
+      leverage: '1:100',
+      fee: '€540 (Reembolsable)'
+    },
+    {
+      id: 'fundingpips_100k',
+      firm: 'Funding Pips',
+      size: '$100K Evaluation',
+      initialBalance: 100000,
+      target: 8000,
+      maxDrawdown: 10000,
+      drawdownType: 'Fixed Max Loss',
+      dailyLimit: 5000,
+      leverage: '1:100',
+      fee: '$399'
+    },
+    {
+      id: 'myfundedfx_50k',
+      firm: 'MyFundedFX 2-Step',
+      size: '$50K Evaluation',
+      initialBalance: 50000,
+      target: 4000,
+      maxDrawdown: 4000,
+      drawdownType: 'Fixed Max Loss',
+      dailyLimit: 2500,
+      leverage: '1:100',
+      fee: '$299'
+    },
+    {
+      id: 'the5ers_100k',
+      firm: 'The 5%ers Bootcamp',
+      size: '$100K Bootcamp',
+      initialBalance: 100000,
+      target: 6000,
+      maxDrawdown: 5000,
+      drawdownType: 'Fixed Max Loss',
+      dailyLimit: 5000,
+      leverage: '1:30',
+      fee: '€95'
+    }
+  ]
+};
+
 export default function Dashboard({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState('agenda'); // agenda, workstation, webhook, compliance
+  const [activeTab, setActiveTab] = useState('agenda'); // agenda, workstation, webhook, compliance, retos
   const [balance, setBalance] = useState(user.balance || 50000);
   const [peakBalance, setPeakBalance] = useState(user.balance || 50000);
+  const [activeChallenge, setActiveChallenge] = useState(null);
+  const [selectedPropCategory, setSelectedPropCategory] = useState('futures');
   
   // Multi-Pair and Replay active configurations
   const [activeAsset, setActiveAsset] = useState('XAUUSD');
@@ -496,6 +627,28 @@ export default function Dashboard({ user, onLogout }) {
       setPeakBalance(engine.peakBalance);
     }
 
+    // Paso 4.5: Si hay un reto prop activo, auditar las reglas
+    if (activeChallenge && activeChallenge.status === 'RUNNING') {
+      const currentBal = engine.balanceActual;
+      const targetProfit = activeChallenge.target;
+      const initialBal = activeChallenge.initialBalance;
+      const dailyLimit = activeChallenge.dailyLimit;
+      
+      // Calculate current closed session PnL
+      const sessionPnl = engine.stats.totalPnl;
+      
+      // Pass Condition
+      if (currentBal >= initialBal + targetProfit) {
+        setActiveChallenge(prev => ({ ...prev, status: 'PASSED' }));
+        logToConsole(`🎉 ¡RETO COMPLETO Y SUPERADO! Has superado el desafío de ${activeChallenge.firm} ${activeChallenge.size} con un balance final de $${currentBal.toLocaleString()}.`, 'success');
+      } 
+      // Fail Condition (Trailing Drawdown cushion <= 0 OR Daily Loss Limit breached)
+      else if (engine.cushion <= 0 || (dailyLimit > 0 && sessionPnl <= -dailyLimit)) {
+        setActiveChallenge(prev => ({ ...prev, status: 'FAILED' }));
+        logToConsole(`❌ RETO FALLIDO: Has violado las reglas de gestión de riesgo de ${activeChallenge.firm}. Tu cuenta simulada ha sido liquidada.`, 'error');
+      }
+    }
+
     // Step 5: Update engine snapshot for stats panels
     syncEngineSnapshot();
   };
@@ -535,17 +688,22 @@ export default function Dashboard({ user, onLogout }) {
   };
 
   // Resetear el simulador
-  const handleResetSimulator = () => {
+  const handleResetSimulator = (customBal, customDrawdown) => {
     const engine = engineRef.current;
     setCurrentCandleIndex(20);
     setIsPlaying(false);
     
-    const initBal = user.balance || 50000;
+    const initBal = typeof customBal === 'number' ? customBal : (user.balance || 50000);
     setBalance(initBal);
     setPeakBalance(initBal);
     
-    // Reset the SimulationEngine
+    // Reset the SimulationEngine with the drawdown amount
     if (engine) {
+      if (typeof customDrawdown === 'number') {
+        engine.maxDrawdownAmount = customDrawdown;
+      } else {
+        engine.maxDrawdownAmount = 2500;
+      }
       engine.resetSession(initBal);
     }
     
@@ -574,6 +732,24 @@ export default function Dashboard({ user, onLogout }) {
     ]);
     
     syncEngineSnapshot();
+  };
+
+  // Manejo de inicio de un reto prop
+  const handleStartChallenge = (challenge) => {
+    setActiveChallenge({
+      ...challenge,
+      status: 'RUNNING'
+    });
+    handleResetSimulator(challenge.initialBalance, challenge.maxDrawdown);
+    logToConsole(`🏆 ¡Reto Prop de ${challenge.firm} activado con éxito! Objetivo: +$${challenge.target} | Drawdown: -$${challenge.maxDrawdown}`, 'success');
+    setActiveTab('retos');
+  };
+
+  // Manejo de abandonar un reto prop
+  const handleAbandonChallenge = () => {
+    setActiveChallenge(null);
+    handleResetSimulator(user.balance || 50000, 2500);
+    logToConsole(`Reto Prop abandonado. Has regresado al modo libre de backtesting.`, 'info');
   };
 
   // Manejo de adición de un trade agendado
@@ -896,6 +1072,14 @@ export default function Dashboard({ user, onLogout }) {
             >
               <ShieldAlert className={`w-4 h-4 ${activeTab === 'compliance' ? 'text-accent-green' : 'text-zinc-500'}`} />
               Auditoría de Riesgo
+            </button>
+
+            <button
+              onClick={() => setActiveTab('retos')}
+              className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${activeTab === 'retos' ? 'bg-white/5 border border-white/10 text-white shadow-inner shadow-white/5' : 'text-zinc-500 hover:text-zinc-300'}`}
+            >
+              <Trophy className={`w-4 h-4 ${activeTab === 'retos' ? 'text-accent-purple' : 'text-zinc-500'}`} />
+              Retos Prop
             </button>
           </nav>
         </div>
@@ -1887,6 +2071,252 @@ export default function Dashboard({ user, onLogout }) {
                       <span className="text-accent-green font-bold">Reef Defender</span> está operando. Tu bitácora de agenda calcula en tiempo real la fricción de tu broker y re-ajusta tu lotaje pre-trade para impedir que violes el drawdown.
                     </div>
                   </div>
+                </div>
+
+              </motion.div>
+            )}
+
+            {/* TAB: RETOS DE FONDEO (PROP FIRM SIMULATOR) */}
+            {activeTab === 'retos' && (
+              <motion.div
+                key="retos"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="flex flex-col gap-6 text-left"
+              >
+                
+                {/* BANNER DE INICIO */}
+                <div className="relative w-full rounded-3xl border border-white/5 bg-zinc-950/20 p-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4 backdrop-blur-xl overflow-hidden shadow-2xl">
+                  <div className="absolute inset-0 bg-radial-gradient from-accent-purple/5 to-transparent pointer-events-none" />
+                  <div className="relative z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-accent-purple/10 border border-accent-purple/20 text-[9px] font-extrabold text-accent-purple uppercase tracking-widest">
+                      PROP CHALLENGES GAMIFIED
+                    </span>
+                    <h3 className="font-title font-black text-xl text-white mt-3 tracking-tight">
+                      Desafíos de Fondeo en Replay
+                    </h3>
+                    <p className="text-zinc-400 text-xs mt-1.5 font-body leading-relaxed max-w-xl">
+                      Entrena bajo las reglas exactas de las firmas de fondeo de Forex y Futuros más grandes del mundo. Testea tu disciplina vela a vela en un entorno real de replay sin arriesgar miles de dólares en evaluaciones fallidas.
+                    </p>
+                  </div>
+                  
+                  {/* CATEGORY SWITCHER */}
+                  <div className="relative z-10 flex bg-black/60 border border-white/5 p-1 rounded-xl backdrop-blur-sm self-start sm:self-center">
+                    <button
+                      onClick={() => setSelectedPropCategory('futures')}
+                      className={`px-4 py-2 rounded-lg text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${selectedPropCategory === 'futures' ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                      Futuros (Futures)
+                    </button>
+                    <button
+                      onClick={() => setSelectedPropCategory('forex')}
+                      className={`px-4 py-2 rounded-lg text-xs font-title font-bold uppercase tracking-wider transition-all duration-200 ${selectedPropCategory === 'forex' ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'}`}
+                    >
+                      CFD / Forex
+                    </button>
+                  </div>
+                </div>
+
+                {/* ACTIVE CHALLENGE HUD CONTROL */}
+                {activeChallenge && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className={`relative w-full rounded-3xl border p-6 flex flex-col gap-6 backdrop-blur-xl overflow-hidden shadow-3d ${activeChallenge.status === 'PASSED' ? 'border-accent-green/30 bg-accent-green/5 shadow-3d-neon-green/5' : activeChallenge.status === 'FAILED' ? 'border-accent-red/30 bg-accent-red/5 shadow-3d-neon-red/5' : 'border-accent-blue/20 bg-zinc-950/40 shadow-inner'}`}
+                  >
+                    <div className="absolute inset-0 bg-radial-gradient from-accent-blue/3 to-transparent pointer-events-none" />
+                    
+                    <div className="relative z-10 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className={`w-2 h-2 rounded-full alarm-blink-red ${activeChallenge.status === 'PASSED' ? 'bg-accent-green' : activeChallenge.status === 'FAILED' ? 'bg-accent-red' : 'bg-accent-blue'}`} />
+                          <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">Desafío en Curso Activo</span>
+                        </div>
+                        <h4 className="font-title font-black text-lg text-white mt-1">
+                          {activeChallenge.firm} — <span className="bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-fill-transparent text-transparent">{activeChallenge.size}</span>
+                        </h4>
+                      </div>
+
+                      <div className="flex gap-3">
+                        {activeChallenge.status !== 'RUNNING' ? (
+                          <button
+                            onClick={handleAbandonChallenge}
+                            className="px-5 py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 font-title font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all"
+                          >
+                            Volver al Modo Libre
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleAbandonChallenge}
+                            className="px-5 py-2.5 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red hover:bg-accent-red/20 font-title font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all"
+                          >
+                            Abandonar Desafío
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-white/5 pt-5">
+                      <div className="bg-black/40 border border-white/5 p-3 rounded-2xl">
+                        <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Balance de Cuenta</span>
+                        <span className="block text-base font-mono font-black text-white mt-1">${balance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                      </div>
+
+                      <div className="bg-black/40 border border-white/5 p-3 rounded-2xl">
+                        <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Objetivo de Ganancia</span>
+                        <span className="block text-base font-mono font-black text-accent-green mt-1">+${activeChallenge.target.toLocaleString()}</span>
+                      </div>
+
+                      <div className="bg-black/40 border border-white/5 p-3 rounded-2xl">
+                        <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Colchón de Drawdown</span>
+                        <span className={`block text-base font-mono font-black mt-1 ${engineSnapshot && engineSnapshot.cushion <= 0 ? 'text-accent-red alarm-blink-red' : 'text-accent-blue'}`}>
+                          ${engineSnapshot ? engineSnapshot.cushion.toLocaleString(undefined, {minimumFractionDigits: 2}) : '$0.00'}
+                        </span>
+                      </div>
+
+                      <div className="bg-black/40 border border-white/5 p-3 rounded-2xl">
+                        <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Límite Diario</span>
+                        <span className="block text-base font-mono font-black text-zinc-400 mt-1">
+                          {activeChallenge.dailyLimit > 0 ? `-$${activeChallenge.dailyLimit.toLocaleString()}` : 'Sin límite'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar target */}
+                    {activeChallenge.status === 'RUNNING' && (
+                      <div className="relative z-10 flex flex-col gap-2 border-t border-white/5 pt-5">
+                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider font-mono">
+                          <span className="text-zinc-500">Progreso del Desafío</span>
+                          <span className="text-accent-green">
+                            ${Math.max(0, balance - activeChallenge.initialBalance).toLocaleString(undefined, {maximumFractionDigits: 2})} / ${activeChallenge.target.toLocaleString()} ({Math.min(100, Math.max(0, (balance - activeChallenge.initialBalance) / activeChallenge.target * 100)).toFixed(0)}%)
+                          </span>
+                        </div>
+                        <div className="w-full bg-zinc-900/60 border border-white/5 rounded-full h-3 overflow-hidden p-0.5 shadow-inner">
+                          <div 
+                            style={{ width: `${Math.min(100, Math.max(0, (balance - activeChallenge.initialBalance) / activeChallenge.target * 100))}%` }}
+                            className="h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-green transition-all duration-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Banner Status */}
+                    {activeChallenge.status === 'PASSED' && (
+                      <motion.div 
+                        initial={{ scale: 0.95, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="relative z-10 border border-accent-green/20 bg-accent-green/10 p-4.5 rounded-2xl flex items-center gap-3.5"
+                      >
+                        <Trophy className="w-8 h-8 text-accent-green flex-shrink-0 alarm-blink-red" />
+                        <div className="text-left">
+                          <span className="block text-xs font-black text-white uppercase tracking-wider">¡DESAFÍO SUPERADO CON ÉXITO! 🎉</span>
+                          <span className="block text-[10px] text-zinc-300 font-body leading-relaxed mt-0.5">
+                            Has alcanzado el objetivo de beneficio de +${activeChallenge.target.toLocaleString()} respetando al pie de la letra las reglas del drawdown y los límites de la cuenta. ¡Tu bitácora demuestra una consistencia de nivel profesional!
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {activeChallenge.status === 'FAILED' && (
+                      <motion.div 
+                        initial={{ scale: 0.95, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="relative z-10 border border-accent-red/20 bg-accent-red/10 p-4.5 rounded-2xl flex items-center gap-3.5"
+                      >
+                        <AlertTriangle className="w-8 h-8 text-accent-red flex-shrink-0 alarm-blink-red" />
+                        <div className="text-left">
+                          <span className="block text-xs font-black text-white uppercase tracking-wider">DESAFÍO FALLIDO (CUENTA LIQUIDADA) ❌</span>
+                          <span className="block text-[10px] text-zinc-300 font-body leading-relaxed mt-0.5">
+                            Has violado el límite de Drawdown Dinámico o la pérdida máxima diaria permitida por la empresa de fondeo. Haz clic en "Volver al Modo Libre" o reinicia la sesión para volver a intentarlo y entrenar tu disciplina.
+                          </span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                )}
+
+                {/* CHALLENGES CARDS GRID */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {PROP_CHALLENGES[selectedPropCategory].map((challenge) => {
+                    const isCurrentChallenge = activeChallenge && activeChallenge.id === challenge.id;
+                    const isDisabled = activeChallenge && activeChallenge.status === 'RUNNING';
+                    
+                    return (
+                      <div 
+                        key={challenge.id}
+                        className={`relative rounded-3xl border bg-zinc-950/20 backdrop-blur-xl p-5 flex flex-col justify-between gap-5 transition-all duration-300 shadow-3d hover:border-white/10 ${isCurrentChallenge ? 'border-accent-purple/40 shadow-3d-neon-purple/5' : 'border-white/5'}`}
+                      >
+                        {isCurrentChallenge && (
+                          <div className="absolute top-0 right-6 -translate-y-1/2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-accent-blue to-accent-purple text-[8px] font-extrabold uppercase tracking-widest text-white shadow-lg alarm-blink-red">
+                            <Trophy className="w-2.5 h-2.5" />
+                            Reto Activo
+                          </div>
+                        )}
+
+                        <div className="flex flex-col gap-3">
+                          <div className="text-left">
+                            <span className="block text-[8px] font-bold text-zinc-500 uppercase tracking-widest">{challenge.firm}</span>
+                            <h4 className="font-title font-black text-base text-white mt-0.5">{challenge.size}</h4>
+                          </div>
+
+                          <div className="h-[1px] bg-white/5" />
+
+                          {/* Challenge Specs Table */}
+                          <div className="flex flex-col gap-2 text-[10px] font-mono">
+                            <div className="flex justify-between text-zinc-500">
+                              <span>Objetivo:</span>
+                              <span className="text-accent-green font-bold">+${challenge.target.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between text-zinc-500">
+                              <span>Drawdown Máx:</span>
+                              <span className="text-accent-red font-bold">-${challenge.maxDrawdown.toLocaleString()} ({challenge.drawdownType})</span>
+                            </div>
+                            <div className="flex justify-between text-zinc-500">
+                              <span>Pérdida Diaria:</span>
+                              <span className="text-zinc-300 font-bold">{challenge.dailyLimit > 0 ? `-$${challenge.dailyLimit.toLocaleString()}` : 'Sin límite'}</span>
+                            </div>
+                            {challenge.leverage ? (
+                              <div className="flex justify-between text-zinc-500">
+                                <span>Apalancamiento:</span>
+                                <span className="text-accent-blue font-bold">{challenge.leverage}</span>
+                              </div>
+                            ) : (
+                              <div className="flex justify-between text-zinc-500">
+                                <span>Contratos Máx:</span>
+                                <span className="text-accent-blue font-bold">{challenge.contracts}</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between text-zinc-500 border-t border-white/5 pt-2 mt-1">
+                              <span>Costo de Acceso:</span>
+                              <span className="text-zinc-400 font-bold">{challenge.fee}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {isCurrentChallenge ? (
+                          <button
+                            onClick={handleAbandonChallenge}
+                            className="w-full py-3 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red font-title font-bold text-xs uppercase tracking-widest hover:bg-accent-red/20 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                            <span>Terminar Desafío</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleStartChallenge(challenge)}
+                            disabled={isDisabled}
+                            className={`w-full py-3 rounded-xl font-title font-bold text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 ${isDisabled ? 'bg-zinc-900 border border-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-white hover:bg-zinc-200 text-black shadow-lg shadow-white/5 border-transparent'}`}
+                          >
+                            <Trophy className="w-4 h-4 text-accent-gold alarm-blink-red" />
+                            <span>Iniciar Desafío</span>
+                          </button>
+                        )}
+
+                      </div>
+                    );
+                  })}
                 </div>
 
               </motion.div>
