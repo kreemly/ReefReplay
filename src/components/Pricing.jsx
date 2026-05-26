@@ -5,35 +5,35 @@ import { Check, X, Shield, Sparkles } from 'lucide-react';
 export default function Pricing({ onCta }) {
   const tiers = [
     {
-      name: "Free",
+      name: "Free Practicante",
       price: "$0",
       period: "para siempre",
-      desc: "Ideal para traders principiantes que quieren registrar su bitácora técnica básica sin costes.",
+      desc: "Practica tu análisis técnico de forma ilimitada sobre gráficos interactivos.",
       features: [
-        { text: "Diario técnico básico ilimitado", checked: true },
-        { text: "Límite de 50 trades mensuales", checked: true },
-        { text: "Gráficos SVG sencillos", checked: true },
-        { text: "Planificador de sesión restrictivo", checked: false },
-        { text: "Fricción y spreads variables", checked: false },
-        { text: "Prop Firm Guardian (Trailing DD)", checked: false },
-        { text: "Diagnóstico Reef Coach AI", checked: false }
+        { text: "Simulador de velas XAUUSD y EURUSD", checked: true },
+        { text: "Herramientas de dibujo 100% interactivas", checked: true },
+        { text: "Órdenes de compra y venta rápidas", checked: true },
+        { text: "Estadísticas de P&L básicas", checked: true },
+        { text: "Simulación de Spreads y Comisiones", checked: false },
+        { text: "Simulador de Reglas Prop Firm (Reef Defender)", checked: false },
+        { text: "Multi-temporalidad en tiempo real", checked: false }
       ],
       popular: false,
       btnText: "Iniciar Gratis",
       btnClass: "bg-white/5 hover:bg-white/10 text-white border-white/10"
     },
     {
-      name: "Pro",
-      price: "$49",
+      name: "Pro Backtester",
+      price: "$9.90",
       period: "/mes",
-      desc: "Desbloquea la potencia analítica de backtesting, simulador de spreads y conexión a broker.",
+      desc: "El precio más accesible del mercado para entrenar tu consistencia vela a vela.",
       features: [
-        { text: "Trades y diario ILIMITADOS", checked: true },
-        { text: "Planificador pre-sesión completo", checked: true },
-        { text: "Terminal & Broker (MT5/cTrader)", checked: true },
-        { text: "Simulador de Spreads y Slippages", checked: true },
-        { text: "Datos históricos de alta calidad", checked: true },
-        { text: "Prop Firm Guardian (Trailing DD)", checked: false },
+        { text: "Simulación en los 17 pares + Oro y Plata", checked: true },
+        { text: "Herramientas de dibujo 100% interactivas", checked: true },
+        { text: "Multi-temporalidad real (M15, M30, H1, D1)", checked: true },
+        { text: "Simulador de Reglas Prop Firm (Reef Defender)", checked: true },
+        { text: "Cálculo automático de lotajes y spreads", checked: true },
+        { text: "Estadísticas completas (Win Rate, PF)", checked: true },
         { text: "Diagnóstico Reef Coach AI", checked: false }
       ],
       popular: true,
@@ -41,18 +41,17 @@ export default function Pricing({ onCta }) {
       btnClass: "bg-gradient-to-r from-accent-blue to-accent-purple text-white border-transparent shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:scale-105"
     },
     {
-      name: "Elite",
-      price: "$99",
+      name: "Elite Performance",
+      price: "$19.90",
       period: "/mes",
-      desc: "La estación ejecutiva definitiva. Auditorías psicológicas y blindaje completo de Prop Firms.",
+      desc: "La suite definitiva para traders profesionales que buscan auditar su psicología.",
       features: [
         { text: "Todos los features Pro incluidos", checked: true },
-        { text: "Prop Firm Trailing DD Guardian", checked: true },
-        { text: "Disyuntor de Emergencia (API lock)", checked: true },
-        { text: "Reef Coach AI ilimitado en vivo", checked: true },
-        { text: "Análisis psicológico y de fugas", checked: true },
-        { text: "Conexión Prop Firm (Rithmic)", checked: true },
-        { text: "Soporte cuantitativo 24/7", checked: true }
+        { text: "Configurador de límites de riesgo a medida", checked: true },
+        { text: "Diagnóstico Psicotécnico de ReefReplay AI", checked: true },
+        { text: "Bitácora avanzada con registro emocional", checked: true },
+        { text: "Simulación de deslizamiento (Slippage)", checked: true },
+        { text: "Soporte prioritario 24/7", checked: true }
       ],
       popular: false,
       btnText: "Obtener Elite",
